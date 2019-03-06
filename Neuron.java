@@ -3,19 +3,21 @@ import java.util.ArrayList;
 
 public class Neuron{
 
-    float bias, biasWeight;
-    ArrayList<Connection> inputConnections;
-    boolean activated;
-    float value;
-    Random r;
+    private float bias, biasWeight;
+    private ArrayList<Connection> inputConnections;
+    private boolean activated;
+    private float value;
+    private Random r;
+    private int id;
 
-    public Neuron(float bias){
+    public Neuron(float bias, int id){
         this.bias = bias;
         r = new Random();
         this.biasWeight = r.nextFloat();
         inputConnections = new ArrayList<Connection>();
         activated = false;
         value = 0.0f;
+        this.id = id;
     }
 
     public float sum(){
@@ -28,11 +30,7 @@ public class Neuron{
     }
 
     public void addConnection(Neuron n){
-        float weight = r.nextFloat();
-        //yea this sucks but I am lazy at the moment.
-        if (r.nextFloat() > 0.5)
-            weight = weight * -1;
-        inputConnections.add(new Connection(n, weight));
+        inputConnections.add(new Connection(n));
     }
 
     //Use for input nodes.
@@ -50,7 +48,7 @@ public class Neuron{
     public void feed(){
         for (Connection c : inputConnections){
             if (!c.neuron.activated){
-                System.out.println("Feeding: " + c.neuron);
+                System.out.println("Feeding: " + c.neuron.getID());
                 c.neuron.feed();
             }
         }
@@ -66,24 +64,37 @@ public class Neuron{
         return value;
     }
 
-    public static void main(String[] args){
-        float[] x = new float[12];
-        Random r = new Random();
-        for (int i = 0; i < 12; i++){
-            x[i] = r.nextFloat() * 10;
-        }
-        // Neuron n = new Neuron(x, -1, r.nextFloat());
-        // System.out.println((double)n.activate());
+    public void setActivation(boolean b){
+        activated = b;
     }
 
+    public int getID(){
+        return id;
+    }
+
+    public void removeConnection(Connection c1){
+        for (Connection c2 : inputConnections){
+            if (c1 == c2){
+                inputConnections.remove(c2);
+                return;
+            }
+        }
+    }
 }
 
 class Connection{
     public Neuron neuron;
     public float weight;
+    private Random r;
 
-    public Connection(Neuron n, float w){
+    public Connection(Neuron n){
         neuron = n;
-        weight = w;
+    }
+
+    public void randomizeWeight(){
+        weight = r.nextFloat();
+        //yea this sucks but I am lazy at the moment.
+        if (r.nextFloat() > 0.5)
+            weight = weight * -1;
     }
 }
