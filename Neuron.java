@@ -3,65 +3,67 @@ import java.util.ArrayList;
 
 public class Neuron{
 
-    ArrayList<Float> weights, inputs;
     float bias, biasWeight;
-    int curIndex;
-    ArrayList<Neuron> connections;
+    ArrayList<Connection> inputConnections;
+    boolean activated;
+    float value;
+    Random r;
 
-
-    public Neuron(int numInputs, float bias){
+    public Neuron(float bias){
         this.bias = bias;
-        Random r = new Random();
+        r = new Random();
         this.biasWeight = r.nextFloat();
-        weights = new ArrayList<Float>();
-        inputs = new ArrayList<Float>();
-        connections = new ArrayList<Neuron>();
-
-        curIndex = 0;
-
-        for (int i = 0; i < numInputs; i++){
-            weights.add(r.nextFloat());
-            inputs.add((float)0.0);
-            //yea this sucks but I am lazy at the moment.
-            if (r.nextFloat() > 0.5)
-                weights.set(i, weights.get(i) *-1);
-        }
+        inputConnections = new ArrayList<Connection>();
+        activated = false;
+        value = 0.0f;
     }
 
     public float sum(){
         float sum = 0;
-        for (int i = 0; i < inputs.size(); i++){
-            sum += inputs.get(i) * weights.get(i);
+        for (Connection c : inputConnections){
+            sum += c.neuron.getValue() * c.weight;
         }
         sum += bias * biasWeight;
         return sum;
     }
 
+    public void addConnection(Neuron n){
+        float weight = r.nextFloat();
+        //yea this sucks but I am lazy at the moment.
+        if (r.nextFloat() > 0.5)
+            weight = weight * -1;
+        inputConnections.add(new Connection(n, weight));
+    }
+
+    //Use for input nodes.
     public void setInput(float val){
-        inputs.set(curIndex, val);
-        curIndex++;
+        activated = true;
+        value = val;
         System.out.println("Setting input --> " + val);
-        if (curIndex >= inputs.size())
-            curIndex = 0;
     }
 
-    public float activate(){
+    public void activate(){
         float d = (float) Math.pow((double) Math.exp(1.0),(double) sum());
-        return (float) (1.0/(1+d));
-    }
-
-    public void setConnection(Neuron n){
-        connections.add(n);
+        value = (float) (1.0/(1+d));
     }
 
     public void feed(){
-        for (Neuron n : connections){
-            n.setInput(activate());
+        for (Connection c : inputConnections){
+            if (!c.neuron.activated){
+                System.out.println("Feeding: " + c.neuron);
+                c.neuron.feed();
+            }
         }
+        activate();
+        activated = true;
     }
 
-    public ArrayList<Neuron> getConnections(){
-        return connections;
+    public ArrayList<Connection> getConnections(){
+        return inputConnections;
+    }
+
+    public float getValue(){
+        return value;
     }
 
     public static void main(String[] args){
@@ -74,4 +76,14 @@ public class Neuron{
         // System.out.println((double)n.activate());
     }
 
+}
+
+class Connection{
+    public Neuron neuron;
+    public float weight;
+
+    public Connection(Neuron n, float w){
+        neuron = n;
+        weight = w;
+    }
 }
