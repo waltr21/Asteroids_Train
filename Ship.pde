@@ -7,6 +7,7 @@ public class Ship{
     int k;
     int lives, maxLives, score;
     Vector velocity;
+    ArrayList<Sensor> sensors;
 
     /**
      * Constuctor for the ship class.
@@ -33,6 +34,8 @@ public class Ship{
         this.pressedChars = new ArrayList<Integer>();
         this.bullets = new ArrayList<Bullet>();
         this.velocity = new Vector();
+        sensors = new ArrayList<Sensor>();
+        sensors.add(new Sensor())
     }
 
     /**

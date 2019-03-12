@@ -67,8 +67,6 @@ public class Network{
         randNode.addConnection(tempHidden, randConnection.weight);
         hidden.add(tempHidden);
 
-        System.out.println("Adding node " + tempHidden.getID() +  " --> " + randConnection.neuron.getID() + " - " + randNode.getID());
-
         //Set the layer of this node to its output + 1
         // tempHidden.setLayer(randNode.getLayer() + 1);
     }
@@ -86,7 +84,7 @@ public class Network{
             if  (!checkRepeat(node, randHidden)){
                 node.addConnection(randHidden);
                 if (!checkDeadlock(node, node)){
-                    System.out.println("Setting connection: " + randHidden.getID() + " --> " +  node.getID());
+                    System.out.println("Setting connection: " + node.getID() + " --> " +  randHidden.getID());
                     break;
                 }
                 else{
@@ -159,13 +157,13 @@ public class Network{
     }
 
     public static void main(String[] args){
-        Network n = new Network(3, 2);
-        float[] inputs = {0.4f, 0.9f, 0.33f};
+        Network n = new Network(8, 3);
+        float[] inputs = {0.4f, 0.9f, 0.33f, 0.5f, 0.01f, 0.67f, 0.13f, 0.28f};
         for (int i = 0; i < 5; i++){
             n.addRandHiddenNode();
         }
         Random r = new Random();
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 30; i++){
             n.addRandConnection(n.outputs.get(r.nextInt(n.outputs.size())));
         }
         n.runNetwork(inputs);
