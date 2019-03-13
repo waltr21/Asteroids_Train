@@ -1,38 +1,42 @@
+import java.util.concurrent.ThreadLocalRandom;
+
 public class GameScene{
     boolean online;
+    Locals locals;
 
-    public GameScene(){
-        level = 1;
-        resetAstroids(level);
-        player = new Ship();
+    public GameScene(Locals l){
+        locals = l;
+        locals.level = 20;
+        resetAstroids(locals.level);
+        locals.player = new Ship(locals);
     }
 
     /**
      * Show the text of the scene
      */
     private void showText(){
-        textAlign(CENTER);
+        textMode(CENTER);
         textSize(30);
-        String levelString = "Level " + level + "\n" + player.getScore();
+        String levelString = "Level " + locals.level + "\n" + locals.player.getScore();
         fill(255);
         textSize(30);
         text(levelString, width/2, 50);
         String liveString = "";
-        for (int i = 0; i < player.getLives(); i++){
+        for (int i = 0; i < locals.player.getLives(); i++){
             liveString += " | ";
         }
         text(liveString, width - 50, 50);
     }
 
     private void resetAstroids(int level){
-        asteroids.clear();
+        locals.asteroids.clear();
         int num = 2 + (level * 2);
         for (int i = 0; i < num; i++){
-            float tempX = random(50, width - 50);
-            float tempY = random(50, height/2 - 150) + ((height/2 + 150) * int(random(0, 2)));
-            asteroids.add(new Asteroid(tempX, tempY, 3));
-            player.resetPos();
-            player.clearBullets();
+            float tempX = ThreadLocalRandom.current().nextInt(50, locals.width - 50);
+            float tempY = ThreadLocalRandom.current().nextInt(50, locals.height/2 - 150) + ((locals.height/2 + 150) * ((ThreadLocalRandom.current().nextInt(0, 2))));
+            locals.asteroids.add(new Asteroid(tempX, tempY, 3, locals));
+            locals.player.resetPos();
+            locals.player.clearBullets();
         }
     }
 
@@ -41,7 +45,7 @@ public class GameScene{
      */
     private void showAsteroids(){
         try{
-           for (Asteroid a : asteroids){
+           for (Asteroid a : locals.asteroids){
                a.show();
            }
         }
@@ -51,9 +55,9 @@ public class GameScene{
     }
 
     private boolean checkLevel(){
-        if (asteroids.size() < 1){
-            level++;
-            resetAstroids(level);
+        if (locals.asteroids.size() < 1){
+            locals.level++;
+            resetAstroids(locals.level);
             return true;
         }
         return false;
@@ -62,7 +66,8 @@ public class GameScene{
     public void show(){
         background(0);
         showText();
-        player.show();
+        // locals.player.showBullets();
+        locals.player.show();
         showAsteroids();
         checkLevel();
     }

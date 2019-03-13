@@ -1,16 +1,25 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 
-public class Network{
+public class Network implements Serializable, Comparable<Network>{
     ArrayList<Neuron> inputs, outputs, hidden;
     int idCount;
     float bias;
     Random r;
+    double fitness, genFitness;
+    Object agent;
 
-    public Network(int numInputs, int numOutputs){
+    public Network(int numInputs, int numOutputs, Object a){
         idCount = 0;
         bias = 1.0f;
+        fitness = 0.0;
+        agent = a;
         inputs = new ArrayList<Neuron>();
         outputs = new ArrayList<Neuron>();
         hidden = new ArrayList<Neuron>();
@@ -31,6 +40,16 @@ public class Network{
         }
 
         initConnections();
+    }
+
+    public Network(ArrayList<Neuron> inputs, ArrayList<Neuron> hidden, ArrayList<Neuron> outputs, float bias, int idCount, Object agent){
+        this.inputs = inputs;
+        this.outputs = outputs;
+        this.hidden = hidden;
+
+        this.bias = bias;
+        this.idCount = idCount;
+        this.agent = agent;
     }
 
     private void initConnections(){
@@ -126,7 +145,7 @@ public class Network{
         return false;
     }
 
-    private void runNetwork(float[] initInputs){
+    public void runNetwork(float[] initInputs){
         if (initInputs.length !=  inputs.size()){
             System.out.println("Error: Input mismatch...");
             return;
@@ -158,19 +177,145 @@ public class Network{
         return nums;
     }
 
+    public double getFitness(){
+        return fitness;
+    }
+
+    public void setFitness(double d){
+        fitness = d;
+    }
+
+    public Network copy(){
+        ArrayList<Neuron> tempInputs = new ArrayList<Neuron>();
+        ArrayList<Neuron> tempHidden = new ArrayList<Neuron>();
+        ArrayList<Neuron> tempOutputs = new ArrayList<Neuron>();
+
+        for (Neuron n : inputs){
+            tempInputs.add(n.copy());
+        }
+
+        for (Neuron n : hidden){
+            tempHidden.add(n.copy());
+        }
+
+        for (Neuron n : outputs){
+            tempOutputs.add(n.copy());
+        }
+
+        ArrayList<Neuron> validNodes = new ArrayList<Neuron>();
+        validNodes.addAll(tempInputs);
+        validNodes.addAll(tempHidden);
+
+        for (int i = 0; i < hidden.size(); i++){
+            Neuron n = hidden.get(i);
+            for (Connection c : n.getConnections()){
+                int id = c.neuron.getID();
+                Neuron connectionNeuron = null;
+                for (Neuron x : validNodes){
+                    if (x.getID() == id){
+                        connectionNeuron = x;
+                    }
+                }
+                tempHidden.get(i).addConnection(connectionNeuron, c.weight);
+            }
+        }
+
+        for (int i = 0; i < outputs.size(); i++){
+            Neuron n = outputs.get(i);
+            for (Connection c : n.getConnections()){
+                int id = c.neuron.getID();
+                Neuron connectionNeuron = null;
+                for (Neuron x : validNodes){
+                    if (x.getID() == id){
+                        connectionNeuron = x;
+                    }
+                }
+                tempOutputs.get(i).addConnection(connectionNeuron, c.weight);
+            }
+        }
+
+        return new Network(tempInputs, tempHidden, tempOutputs, this.bias, this.idCount, this.agent);
+    }
+
+    public boolean saveToFile(String s){
+        try{
+            FileOutputStream fos = new FileOutputStream(s + ".net");
+    		ObjectOutputStream oos = new ObjectOutputStream(fos);
+    		oos.writeObject(this);
+    		oos.close();
+            return true;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public static Network loadFromFile(String s){
+        try{
+            FileInputStream fis = new FileInputStream(s + ".net");
+    		ObjectInputStream ois = new ObjectInputStream(fis);
+    		Network n = (Network) ois.readObject();
+    		ois.close();
+            return n;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    public void setGenFitness(double f){
+        genFitness = f;
+    }
+
+    public double getGenFitness(){
+        return genFitness;
+    }
+
+    @Override
+    public int compareTo(Network o) {
+        if (this.genFitness > o.getGenFitness()){
+            return -1;
+        }
+        if (this.genFitness < o.getGenFitness()){
+            return 1;
+        }
+        return 0;
+    }
+
     public static void main(String[] args){
-        Network n = new Network(3, 2);
+        Locals l = new Locals();
+        Network n = new Network(3, 2, l);
+
+
         float[] inputs = {0.4f, 0.9f, 0.33f};
-        for (int i = 0; i < 5; i++){
-            n.addRandHiddenNode();
-        }
-        Random r = new Random();
-        for (int i = 0; i < 4; i++){
-            n.addRandConnection(n.outputs.get(r.nextInt(n.outputs.size())));
-        }
         n.runNetwork(inputs);
         for (float i : n.getSimpleOutput()){
-            System.out.println(i);
+            System.out.print(i + ", ");
         }
+        System.out.println("\n------------------------------------------");
+        n.saveToFile("test");
+
+        Network nCopy = Network.loadFromFile("test");
+
+        for (float i : nCopy.getSimpleOutput()){
+            System.out.print(i + ", ");
+        }
+        System.out.println("");
+
+        // Network n = new Network(3, 2);
+        // float[] inputs = {0.4f, 0.9f, 0.33f};
+        // for (int i = 0; i < 5; i++){
+        //     n.addRandHiddenNode();
+        // }
+        // Random r = new Random();
+        // for (int i = 0; i < 4; i++){
+        //     n.addRandConnection(n.outputs.get(r.nextInt(n.outputs.size())));
+        // }
+        // n.runNetwork(inputs);
+        // for (float i : n.getSimpleOutput()){
+        //     System.out.println(i);
+        // }
     }
 }

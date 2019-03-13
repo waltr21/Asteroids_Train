@@ -1,17 +1,16 @@
 import java.util.ArrayList;
 
-Ship player;
-ArrayList<Asteroid> asteroids;
 GameScene GS;
-int level;
+Locals locals;
 
 void setup(){
-    size(1000, 900, OPENGL);
+    locals = new Locals();
+    size(900, 900, OPENGL);
     frameRate(60);
-    player = new Ship();
-    asteroids = new ArrayList<Asteroid>();
-    GS = new GameScene();
-    level = 10;
+    locals.player = new Ship(locals);
+    locals.asteroids = new ArrayList<Asteroid>();
+    GS = new GameScene(locals);
+    // locals.level = 10;
 }
 
 void draw(){
@@ -30,7 +29,7 @@ void keyReleased(){
     else{
         code = keyCode;
     }
-    player.processButtonReleased(int(Character.toLowerCase(code)));
+    locals.player.processButtonReleased(int(Character.toLowerCase(code)));
 }
 
 /**
@@ -48,5 +47,5 @@ void keyPressed(){
     }
 
 
-    player.processButtonPress(code);
+    locals.player.processButtonPress(code);
 }

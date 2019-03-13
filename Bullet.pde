@@ -1,10 +1,16 @@
+import java.lang.Math;
+
+
 public class Bullet{
-    float x, y, angle, size;
+    double x, y, angle, size;
     int count;
     boolean owner;
     Vector velocity;
+    final double PI = 3.14159265359;
+    Locals locals;
 
-    public Bullet(float x, float y, float angle){
+    public Bullet(double x, double y, double angle, Locals l){
+        locals = l;
         this.x = x;
         this.y = y;
         this.angle = angle - PI/2;
@@ -53,10 +59,10 @@ public class Bullet{
     }
 
     public void checkHit(){
-        for (Asteroid a : asteroids){
-            float distance = dist(a.getX(), a.getY(), x, y);
+        for (Asteroid a : locals.asteroids){
+            double distance = dist(a.getX(), a.getY(), x, y);
             if (distance < a.getSize()/2 + size/2){
-                player.addScore(a.getScore());
+                locals.player.addScore(a.getScore());
                 a.explode();
                 count = 1000;
                 break;
@@ -67,22 +73,26 @@ public class Bullet{
     public void show(){
         pushMatrix();
         ellipseMode(CENTER);
-        translate(x, y);
+        translate((float) x, (float) y);
         travel();
         noStroke();
         fill(255);
-        ellipse(0, 0, size, size);
+        ellipse(0, 0, (float) size, (float) size);
         popMatrix();
         if (owner)
             checkHit();
     }
 
-    public float getX(){
+    public double getX(){
         return x;
     }
 
-    public float getY(){
+    public double getY(){
         return y;
+    }
+
+    private double dist(double x1, double y1, double x2, double y2){
+        return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
     }
 
 }

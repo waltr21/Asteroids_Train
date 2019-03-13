@@ -1,8 +1,14 @@
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
+import java.lang.Math;
+
+
 public class Asteroid{
-    float x, y, size, angle, maxLevel;
+    double x, y, size, angle, maxLevel;
     int level;
-    String aID;
     Vector velocity;
+    final double PI = 3.14159265359;
+    Locals locals;
 
     /**
      * Constructor for the Asteroid class.
@@ -10,30 +16,20 @@ public class Asteroid{
      * @param y     Y pos of the asteroid
      * @param level Level of asteroid (1-3)
      */
-    public Asteroid(float x, float y, int level){
+    public Asteroid(double x, double y, int level, Locals l){
+        locals = l;
         this.x = x;
         this.y = y;
         this.size = 30 * level;
         this.level = level;
         this.maxLevel = 3;
-        this.angle = random(-PI, PI);
+        this.angle = ThreadLocalRandom.current().nextDouble(-PI, PI);
         this.velocity = Vector.fromAngle(angle);
         this.velocity.mult( (float) ((maxLevel+1) - level) * 0.8);
-        while(true){
-            boolean repeat = false;
-            aID = getRandID();
-            for(Asteroid a : asteroids){
-                if(a.getID().equals(aID)){
-                    repeat = true;
-                }
-            }
-
-            if (!repeat)
-                break;
-        }
     }
 
-    public Asteroid(float x, float y, float a, int level, String aID){
+    public Asteroid(double x, double y, double a, int level, Locals l){
+        locals = l;
         this.x = x;
         this.y = y;
         this.size = 30 * level;
@@ -42,7 +38,6 @@ public class Asteroid{
         this.angle = a;
         this.velocity = Vector.fromAngle(angle);
         this.velocity.mult(((maxLevel+1) - level) * 0.8);
-        this.aID = aID;
     }
 
 
@@ -71,10 +66,10 @@ public class Asteroid{
     }
 
     public void checkHit(){
-        float distance = dist(x, y, player.getX(), player.getY());
+        double distance = dist(x, y, locals.player.getX(), locals.player.getY());
         //System.out.println(distance);
-        if (distance < size/2 + player.getSize()){
-            player.setHit();
+        if (distance < size/2 + locals.player.getSize()){
+            locals.player.setHit();
         }
     }
 
@@ -82,13 +77,13 @@ public class Asteroid{
         if (level > 1){
 
             for (int i = 0; i < 2; i++){
-                Asteroid newAsteroid = new Asteroid(x, y, level - 1);
-                asteroids.add(newAsteroid);
+                Asteroid newAsteroid = new Asteroid(x, y, level - 1, locals);
+                locals.asteroids.add(newAsteroid);
             }
-            asteroids.remove(this);
+            locals.asteroids.remove(this);
         }
         else{
-            asteroids.remove(this);
+            locals.asteroids.remove(this);
         }
 
     }
@@ -112,45 +107,36 @@ public class Asteroid{
         noFill();
         stroke(255);
         ellipseMode(CENTER);
-        translate(x, y);
-        ellipse(0, 0, size, size);
+        translate((float) x, (float) y);
+        ellipse(0, 0, (float) size, (float) size);
         popMatrix();
     }
 
-    public float getX(){
+    public double getX(){
         return x;
     }
 
-    public float getY(){
+    public double getY(){
         return y;
-    }
-
-    public String getID(){
-        return aID;
     }
 
     public int getLevel(){
         return level;
     }
 
-    public float getAngle(){
+    public double getAngle(){
         return angle;
     }
 
-    public void setAngle(float a){
+    public void setAngle(double a){
         angle = a;
     }
 
-    public float getSize(){
+    public double getSize(){
         return size;
     }
 
-    public String getRandID(){
-        String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        String word = "";
-        for(int i = 0; i < 3; i++){
-            word += chars.charAt(int(random(chars.length())));
-        }
-        return word;
+    private double dist(double x1, double y1, double x2, double y2){
+        return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
     }
 }

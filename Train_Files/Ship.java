@@ -1,18 +1,26 @@
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Ship{
-    float x, y, size, angle, turnRadius, deRate;
+    double x, y, size, angle, turnRadius, deRate;
     ArrayList<Integer> pressedChars;
     ArrayList<Bullet> bullets;
     boolean turn, accelerate, dead, noHit;
     long timeStamp;
     int k;
     int lives, maxLives, score;
-    PVector velocity;
+    Vector velocity;
+    static int width = 900;
+    static int height = 900;
+    final double PI = 3.14159265359;
+    Locals locals;
 
     /**
      * Constuctor for the ship class.
      * @param a Asteroids in the game for the ship to reference.
      */
-    public Ship(){
+    public Ship(Locals l){
+        locals = l;
         //X and Y for the ship.
         this.x = width/2;
         this.y = height/2;
@@ -32,7 +40,7 @@ public class Ship{
         //(Mainly used for making turning less janky.)
         this.pressedChars = new ArrayList<Integer>();
         this.bullets = new ArrayList<Bullet>();
-        this.velocity = new PVector();
+        this.velocity = new Vector();
     }
 
     /**
@@ -129,8 +137,8 @@ public class Ship{
     }
 
     private void hyperDrive(){
-        x = random(20, width - 20);
-        y = random(20, height - 20);
+        x = ThreadLocalRandom.current().nextInt(20, width - 20);
+        y = ThreadLocalRandom.current().nextInt(20, height - 20);
     }
 
     /**
@@ -138,7 +146,7 @@ public class Ship{
      */
     private void accelerate(){
         if (accelerate){
-            PVector force = PVector.fromAngle(angle - PI/2);
+            Vector force = Vector.fromAngle(angle - PI/2);
             //Limit how strong the force is.
             force.mult(0.08);
             velocity.add(force);
@@ -187,7 +195,7 @@ public class Ship{
 
     private void shoot(){
         if (bullets.size() < 4 && !dead){
-            addBullet(new Bullet(x, y, angle));
+            addBullet(new Bullet(x, y, angle, locals));
         }
     }
 
@@ -199,6 +207,10 @@ public class Ship{
         bullets.add(b);
     }
 
+    public long millis(){
+        return System.currentTimeMillis() % 1000;
+    }
+
     /**
      * Display the ship to the screen.
      */
@@ -207,7 +219,7 @@ public class Ship{
             checkNoHit();
             // pushMatrix();
             //Display the bullets
-            //showBullets();
+            showBullets();
 
             //Edit pos of the ship.
             turn();
@@ -272,19 +284,19 @@ public class Ship{
         shoot();
     }
 
-    public float getX(){
+    public double getX(){
         return x;
     }
 
-    public float getY(){
+    public double getY(){
         return y;
     }
 
-    public float getAngle(){
+    public double getAngle(){
         return angle;
     }
 
-    public float getSize(){
+    public double getSize(){
         return size;
     }
 

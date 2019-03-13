@@ -1,7 +1,9 @@
 import java.util.Random;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Neuron{
+
+public class Neuron implements Serializable{
 
     private float bias, biasWeight;
     private ArrayList<Connection> inputConnections;
@@ -14,6 +16,17 @@ public class Neuron{
         this.bias = bias;
         r = new Random();
         this.biasWeight = r.nextFloat();
+        inputConnections = new ArrayList<Connection>();
+        activated = false;
+        value = 0.0f;
+        this.id = id;
+        layer = -1;
+    }
+
+    public Neuron(float bias, int id, float biasWeight){
+        this.bias = bias;
+        r = new Random();
+        this.biasWeight = biasWeight;
         inputConnections = new ArrayList<Connection>();
         activated = false;
         value = 0.0f;
@@ -54,7 +67,7 @@ public class Neuron{
     public void feed(){
         for (Connection c : inputConnections){
             if (!c.neuron.activated){
-                System.out.println("Feeding: " + c.neuron.getID());
+                System.out.println("Feeding: " + c.neuron + " / " + c.neuron.getID());
                 c.neuron.feed();
             }
         }
@@ -97,6 +110,14 @@ public class Neuron{
         }
     }
 
+    public Neuron copy(){
+        // Neuron copy = new Neuron(bias, id, biasWeight);
+        // for (Connection c : inputConnections){
+        //     copy.inputConnections.add(c.copy());
+        // }
+        return new Neuron(bias, id, biasWeight);
+    }
+
     public void removeConnection(Neuron n){
         for (Connection c : inputConnections){
             if (c.neuron == n){
@@ -105,9 +126,23 @@ public class Neuron{
             }
         }
     }
+
+    public static void main(String[] args){
+        Neuron n0 = new Neuron(1, 0);
+        Neuron n1 = new Neuron(1, 1);
+        Neuron n2 = new Neuron(1, 2);
+        Neuron n3 = new Neuron(1, 3);
+
+        n0.addConnection(n1);
+        n0.addConnection(n2);
+        Neuron copy = n0.copy();
+        System.out.println(n0.bias  + " --> " + n0.biasWeight);
+        System.out.println(copy.bias  + " --> " + copy.biasWeight);
+
+    }
 }
 
-class Connection{
+class Connection implements Serializable{
     public Neuron neuron;
     public float weight;
     private Random r;

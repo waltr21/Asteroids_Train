@@ -1,8 +1,7 @@
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Ship{
-    double x, y, size, angle, turnRadius, deRate;
+    float x, y, size, angle, turnRadius, deRate;
     ArrayList<Integer> pressedChars;
     ArrayList<Bullet> bullets;
     boolean turn, accelerate, dead, noHit;
@@ -10,15 +9,13 @@ public class Ship{
     int k;
     int lives, maxLives, score;
     Vector velocity;
-    final double PI = 3.14159265359;
-    Locals locals;
+    ArrayList<Sensor> sensors;
 
     /**
      * Constuctor for the ship class.
      * @param a Asteroids in the game for the ship to reference.
      */
-    public Ship(Locals l){
-        locals = l;
+    public Ship(){
         //X and Y for the ship.
         this.x = width/2;
         this.y = height/2;
@@ -39,6 +36,8 @@ public class Ship{
         this.pressedChars = new ArrayList<Integer>();
         this.bullets = new ArrayList<Bullet>();
         this.velocity = new Vector();
+        sensors = new ArrayList<Sensor>();
+        //sensors.add(new Sensor());
     }
 
     /**
@@ -135,8 +134,8 @@ public class Ship{
     }
 
     private void hyperDrive(){
-        x = ThreadLocalRandom.current().nextInt(20, width - 20);
-        y = ThreadLocalRandom.current().nextInt(20, height - 20);
+        x = random(20, width - 20);
+        y = random(20, height - 20);
     }
 
     /**
@@ -193,7 +192,7 @@ public class Ship{
 
     private void shoot(){
         if (bullets.size() < 4 && !dead){
-            addBullet(new Bullet(x, y, angle, locals));
+            addBullet(new Bullet(x, y, angle));
         }
     }
 
@@ -205,10 +204,6 @@ public class Ship{
         bullets.add(b);
     }
 
-    public long millis(){
-        return System.currentTimeMillis() % 1000;
-    }
-
     /**
      * Display the ship to the screen.
      */
@@ -216,7 +211,7 @@ public class Ship{
         if (!dead){
             checkNoHit();
             pushMatrix();
-            //Display the bullets
+            // Display the bullets
             showBullets();
 
             //Edit pos of the ship.
@@ -230,10 +225,10 @@ public class Ship{
             if (noHit)
                 stroke(56, 252, 159);
             strokeWeight(3);
-            translate((float)x, (float)y);
-            rotate((float)angle);
+            translate(x, y);
+            rotate(angle);
 
-            triangle((float)-size, (float)size, 0, (float)-size - 5, (float)size, (float)size);
+            triangle(-size, size, 0, -size - 5, size, size);
 
             popMatrix();
             return true;
@@ -282,19 +277,19 @@ public class Ship{
         shoot();
     }
 
-    public double getX(){
+    public float getX(){
         return x;
     }
 
-    public double getY(){
+    public float getY(){
         return y;
     }
 
-    public double getAngle(){
+    public float getAngle(){
         return angle;
     }
 
-    public double getSize(){
+    public float getSize(){
         return size;
     }
 

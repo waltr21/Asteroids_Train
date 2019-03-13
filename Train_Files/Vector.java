@@ -1,7 +1,7 @@
 public class Vector{
-    public float x,y;
+    public double x,y;
 
-    public Vector(float x, float y){
+    public Vector(double x, double y){
         this.x = x;
         this.y = y;
     }
@@ -11,11 +11,11 @@ public class Vector{
         this.y = 0;
     }
 
-    public static Vector fromAngle(float a){
+    public static Vector fromAngle(double a){
         return new Vector((float) Math.cos(a), (float) Math.sin(a));
     }
 
-    public void mult(float n){
+    public void mult(double n){
         this.x *= n;
         this.y *= n;
     }
