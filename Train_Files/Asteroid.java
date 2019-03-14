@@ -34,7 +34,7 @@ public class Asteroid{
         locals = l;
         this.x = x;
         this.y = y;
-        this.size = 30 * level;
+        this.size = 40 * level;
         this.level = level;
         this.maxLevel = 3;
         this.angle = a;
@@ -76,6 +76,7 @@ public class Asteroid{
     }
 
     public void explode(){
+        locals.player.numHits++;
         if (level > 1){
 
             for (int i = 0; i < 2; i++){

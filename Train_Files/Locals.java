@@ -8,6 +8,7 @@ public class Locals implements Serializable{
     int level;
     int width;
     int height;
+    Simple_NEAT neat;
 
     public Locals(){
         width = 900;

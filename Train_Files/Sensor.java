@@ -15,9 +15,9 @@ public class Sensor{
         double x2 = x + (Math.cos(angle + this.angle) * length);
         double y2 = y + (Math.sin(angle + this.angle) * length);
         // System.out.println(angle);
-        strokeWeight(2);
-        stroke(255);
-        line((float) x, (float) y, (float) x2, (float) y2);
+        // strokeWeight(2);
+        // stroke(255);
+        // line((float) x, (float) y, (float) x2, (float) y2);
         calculateIntersection(x,y,x2,y2);
     }
 
@@ -42,9 +42,9 @@ public class Sensor{
             }
         }
         if (weightValue > 0.0){
-            fill(255, 0, 0);
-            noStroke();
-            ellipse((float) iX, (float) iY, 15, 15);
+            // fill(255, 0, 0);
+            // noStroke();
+            // ellipse((float) iX, (float) iY, 15, 15);
         }
         // fill(255, 0, 0);
         // ellipse(iX, iY, 10, 10);

@@ -9,51 +9,81 @@ public class Asteroids_Train{
     static int width = 900;
     static int height = 900;
     Locals locals;
+    Simple_NEAT neat;
 
-    void setup(){
+    public Asteroids_Train(){
+        setup();
+        neat = new Simple_NEAT(18, 4);
+        locals.neat = neat;
+        for (int i = 0; i < 60; i++){
+            neat.addAgent();
+        }
+    }
+
+    private void setup(){
         locals = new Locals();
         //size(900, 900, OPENGL);
         //frameRate(60);
         locals.player = new Ship(locals);
         locals.asteroids = new ArrayList<Asteroid>();
         locals.GS = new GameScene(locals);
-        locals.level = 0;
+        locals.level = 5;
     }
 
-    void draw(){
-        GS.show();
-        System.out.println(player.score + " - " + player.dead);
+    private void draw(){
+        locals.GS.show();
+        System.out.println(locals.player.score + " - " + locals.player.dead);
     }
 
-    /**
-     * Button released handle.
-     */
-    void keyReleased(){
-        int code;
-        if (keyCode > 40){
-            code = int(Character.toLowerCase(key));
+    private void runAll(){
+        int totalFrames = 30 * 60;
+        int c = 0;
+        for (int i = 0; i < 60; i++){
+            locals.GS.resetAstroids(locals.level);
+            neat.setCurrentAgent(i);
+            int frameCount = 0;
+
+            while(frameCount < totalFrames && !locals.player.dead){
+                locals.GS.show();
+                frameCount++;
+            }
+
+            int curFit = locals.player.getScore() * frameCount;
+            curFit += curFit * locals.player.getAccuracy();
+            neat.setFitness(i, curFit);
+            // System.out.println(c + " --> " + frameCount + " - " + locals.player.getScore());
+            // System.out.print(String.format("\033[%dA",1)); // Move up
+            // System.out.print("\033[2K"); // Erase line content
+            c++;
+            locals.player.resetPos();
+            locals.player.resetVars();
         }
-        else{
-            code = keyCode;
-        }
-        player.processButtonReleased(int(Character.toLowerCase(code)));
     }
 
-    /**
-     * Button pressed handle.
-     */
-    void keyPressed(){
-        // char k = key;
-        //System.out.println(keyCode);
-        int code;
-        if (keyCode > 40){
-            code = int(Character.toLowerCase(key));
+    public void runGenerations(int count){
+        for (int i = 0; i <= count; i++){
+            // System.out.println("Generation: " + i);
+            runAll();
+            // System.out.print(String.format("\033[2J"));
+            printBest(i);
+            if(i != count)
+                neat.breed();
+            if(i % 50 == 0)
+                locals.level++;
         }
-        else{
-            code = keyCode;
-        }
+        neat.getBestFit().saveToFile("best.net");
+    }
+
+    public void printBest(int gen){
+        // System.out.print(String.format("\033[%dA",1)); // Move up
+        // // System.out.print("\033[2K");
+        System.out.println(String.format("Generation: %d / best fit: %f", gen ,neat.getBestFit().getFitness()));
+    }
 
 
-        player.processButtonPress(code);
+    public static void main(String[] args){
+        Asteroids_Train a = new Asteroids_Train();
+        int gens = Integer.parseInt(args[0]);
+        a.runGenerations(gens);
     }
 }

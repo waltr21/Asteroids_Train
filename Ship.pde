@@ -5,6 +5,7 @@ public class Ship{
     double x, y, size, angle, turnRadius, deRate;
     ArrayList<Integer> pressedChars;
     ArrayList<Bullet> bullets;
+    ArrayList<Sensor> sensors;
     boolean turn, accelerate, dead, noHit;
     long timeStamp;
     int k;
@@ -39,6 +40,26 @@ public class Ship{
         this.pressedChars = new ArrayList<Integer>();
         this.bullets = new ArrayList<Bullet>();
         this.velocity = new Vector();
+        this.sensors = new ArrayList<Sensor>();
+        sensors.add(new Sensor(0, locals));
+        sensors.add(new Sensor(PI, locals));
+        sensors.add(new Sensor(3*PI/2, locals));
+        sensors.add(new Sensor(PI/2, locals));
+        sensors.add(new Sensor(PI/4, locals));
+        sensors.add(new Sensor(3*PI/4, locals));
+        sensors.add(new Sensor(7*PI/4, locals));
+        sensors.add(new Sensor(5*PI/4, locals));
+        sensors.add(new Sensor(22.5*(PI/180), locals));
+        sensors.add(new Sensor(-22.5*(PI/180), locals));
+        sensors.add(new Sensor(-67.5*(PI/180), locals));
+        sensors.add(new Sensor(67.5*(PI/180), locals));
+        sensors.add(new Sensor(112.5*(PI/180), locals));
+        sensors.add(new Sensor(-112.5*(PI/180), locals));
+        sensors.add(new Sensor(-157.5*(PI/180), locals));
+        sensors.add(new Sensor(157.5*(PI/180), locals));
+
+
+
     }
 
     /**
@@ -78,12 +99,20 @@ public class Ship{
         //Make sure we are in the scene and we should be turning.
         if (turn){
             if (k == 'a' || k == 37){
-                angle -= turnRadius;
+                turnLeft();
             }
             if (k == 'd' || k == 39){
-                angle += turnRadius;
+                turnRight();
             }
         }
+    }
+
+    private void turnLeft(){
+        angle -= turnRadius;
+    }
+
+    private void turnRight(){
+        angle += turnRadius;
     }
 
     /**
@@ -192,7 +221,7 @@ public class Ship{
     }
 
     private void shoot(){
-        if (bullets.size() < 4 && !dead){
+        if (bullets.size() < 40 && !dead){
             addBullet(new Bullet(x, y, angle, locals));
         }
     }
@@ -209,6 +238,12 @@ public class Ship{
         return System.currentTimeMillis() % 1000;
     }
 
+    public void showSensors(){
+        for (Sensor s : sensors){
+            s.show(x, y,  angle);
+        }
+    }
+
     /**
      * Display the ship to the screen.
      */
@@ -218,6 +253,7 @@ public class Ship{
             pushMatrix();
             //Display the bullets
             showBullets();
+            showSensors();
 
             //Edit pos of the ship.
             turn();
@@ -280,6 +316,10 @@ public class Ship{
 
     public void processClick(){
         shoot();
+    }
+
+    public ArrayList<Sensor> getSensors(){
+        return sensors;
     }
 
     public double getX(){

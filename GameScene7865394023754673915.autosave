@@ -7,20 +7,19 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 1;
+        locals.level = 4;
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
-        n = new Simple_NEAT(18,4);
-        Network temp  = Network.loadFromFile("C:/Users/WALTR/Downloads/CODE/Processing/Asteroids_Train/best.net");
-        n.addAgent(temp);
-        n.setCurrentAgent(0);
+        n = new Simple_NEAT(8,3);
+        n.addAgent(locals.player);
+        System.out.println(n.setCurrentAgent(locals.player));
     }
 
     /**
      * Show the text of the scene
      */
     private void showText(){
-        textAlign(CENTER);
+        textMode(CENTER);
         textSize(30);
         String levelString = "Level " + locals.level + "\n" + locals.player.getScore();
         fill(255);
@@ -79,41 +78,33 @@ public class GameScene{
     }
 
     public void runNetwork(){
-        float[] inputs = new float[18];
+        float[] inputs = new float[8];
         int c = 0;
         for (Sensor s : locals.player.getSensors()){
             inputs[c] = (float) s.getWeightValue();
             c++;
         }
-        inputs[16] = (float) locals.player.getX() / 900.0;
-        inputs[17] = (float) locals.player.getY() / 900.0;
-        n.runCurrent(inputs);
+        n.runAll(inputs);
 
-        float[] outputs = n.getCurOutput();
+        float[] outputs = n.getAgentOutput(locals.player);
 
-       if (outputs[0] > 0.5){
+        if (outputs[0] > 0.5){
             locals.player.shoot();
         }
-        if (outputs[1] >=0.5){
+        if (outputs[1] >= 0.333 && outputs[1] < 0.666){
             locals.player.turnLeft();
         }
-        if (outputs[2] >= 0.5){
+        if (outputs[1] >= 0.666){
             locals.player.turnRight();
         }
-        if (outputs[3] >= 0.5){
-            locals.player.accelerate = true;
+        if (outputs[2] >= 0.5){
             locals.player.accelerate();
         }
-        else{
-            locals.player.accelerate = false;
-        }
-        
-        String outs = "";
+
         for(float f : outputs){
-            outs +=(f + ", ");
+            System.out.print(f + ", ");
         }
-        textSize(20);
-        text(outs, width/2, height-50);
+        System.out.print( "\n");
 
     }
 }

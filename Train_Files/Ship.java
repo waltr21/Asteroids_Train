@@ -5,14 +5,15 @@ public class Ship{
     double x, y, size, angle, turnRadius, deRate;
     ArrayList<Integer> pressedChars;
     ArrayList<Bullet> bullets;
+    ArrayList<Sensor> sensors;
     boolean turn, accelerate, dead, noHit;
     long timeStamp;
-    int k;
+    int k, numShots, numHits;
     int lives, maxLives, score;
     Vector velocity;
-    static int width = 900;
-    static int height = 900;
     final double PI = 3.14159265359;
+    int width = 900;
+    int height = 900;
     Locals locals;
 
     /**
@@ -41,6 +42,29 @@ public class Ship{
         this.pressedChars = new ArrayList<Integer>();
         this.bullets = new ArrayList<Bullet>();
         this.velocity = new Vector();
+        this.sensors = new ArrayList<Sensor>();
+        sensors.add(new Sensor(0, locals));
+        sensors.add(new Sensor(PI, locals));
+        sensors.add(new Sensor(3*PI/2, locals));
+        sensors.add(new Sensor(PI/2, locals));
+        sensors.add(new Sensor(PI/4, locals));
+        sensors.add(new Sensor(3*PI/4, locals));
+        sensors.add(new Sensor(7*PI/4, locals));
+        sensors.add(new Sensor(5*PI/4, locals));
+        sensors.add(new Sensor(22.5*(PI/180), locals));
+        sensors.add(new Sensor(-22.5*(PI/180), locals));
+        sensors.add(new Sensor(-67.5*(PI/180), locals));
+        sensors.add(new Sensor(67.5*(PI/180), locals));
+        sensors.add(new Sensor(112.5*(PI/180), locals));
+        sensors.add(new Sensor(-112.5*(PI/180), locals));
+        sensors.add(new Sensor(-157.5*(PI/180), locals));
+        sensors.add(new Sensor(157.5*(PI/180), locals));
+
+        numShots = 0;
+        numHits = 0;
+
+
+
     }
 
     /**
@@ -62,6 +86,12 @@ public class Ship{
             turn = false;
     }
 
+    public double getAccuracy(){
+        if (numShots == 0)
+            return 0;
+        return numHits / numShots;
+    }
+
     /**
      * Tell the ship to start to turn in the appropriate direction.
      * @param k key entered by the user.
@@ -80,12 +110,20 @@ public class Ship{
         //Make sure we are in the scene and we should be turning.
         if (turn){
             if (k == 'a' || k == 37){
-                angle -= turnRadius;
+                turnLeft();
             }
             if (k == 'd' || k == 39){
-                angle += turnRadius;
+                turnRight();
             }
         }
+    }
+
+    public void turnLeft(){
+        angle -= turnRadius;
+    }
+
+    public void turnRight(){
+        angle += turnRadius;
     }
 
     /**
@@ -144,7 +182,7 @@ public class Ship{
     /**
      * Accelerates the ship in the current faced direction.
      */
-    private void accelerate(){
+    public void accelerate(){
         if (accelerate){
             Vector force = Vector.fromAngle(angle - PI/2);
             //Limit how strong the force is.
@@ -193,8 +231,9 @@ public class Ship{
         }
     }
 
-    private void shoot(){
+    public void shoot(){
         if (bullets.size() < 4 && !dead){
+            numShots++;
             addBullet(new Bullet(x, y, angle, locals));
         }
     }
@@ -211,15 +250,22 @@ public class Ship{
         return System.currentTimeMillis() % 1000;
     }
 
+    public void showSensors(){
+        for (Sensor s : sensors){
+            s.show(x, y,  angle);
+        }
+    }
+
     /**
      * Display the ship to the screen.
      */
     public boolean show(){
         if (!dead){
             checkNoHit();
-            // pushMatrix();
+            //pushMatrix();
             //Display the bullets
             showBullets();
+            showSensors();
 
             //Edit pos of the ship.
             turn();
@@ -232,10 +278,10 @@ public class Ship{
             // if (noHit)
             //     stroke(56, 252, 159);
             // strokeWeight(3);
-            // translate(x, y);
-            // rotate(angle);
+            // translate((float)x, (float)y);
+            // rotate((float)angle);
             //
-            // triangle(-size, size, 0, -size - 5, size, size);
+            // triangle((float)-size, (float)size, 0, (float)-size - 5, (float)size, (float)size);
             //
             // popMatrix();
             return true;
@@ -282,6 +328,10 @@ public class Ship{
 
     public void processClick(){
         shoot();
+    }
+
+    public ArrayList<Sensor> getSensors(){
+        return sensors;
     }
 
     public double getX(){

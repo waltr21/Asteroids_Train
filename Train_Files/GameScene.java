@@ -6,7 +6,6 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 1;
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
     }
@@ -28,7 +27,7 @@ public class GameScene{
     //     text(liveString, width - 50, 50);
     // }
 
-    private void resetAstroids(int level){
+    public void resetAstroids(int level){
         locals.asteroids.clear();
         int num = 2 + (level * 2);
         for (int i = 0; i < num; i++){
@@ -67,8 +66,48 @@ public class GameScene{
         // background(0);
         // showText();
         // locals.player.showBullets();
+        runNetwork();
         locals.player.show();
         showAsteroids();
         checkLevel();
     }
+
+    public void runNetwork(){
+        float[] inputs = new float[18];
+        int c = 0;
+        for (Sensor s : locals.player.getSensors()){
+            inputs[c] = (float) s.getWeightValue();
+            c++;
+        }
+        inputs[16] = (float) locals.player.getX() / locals.player.width;
+        inputs[17] = (float) locals.player.getY() / locals.player.height;
+
+        locals.neat.runCurrent(inputs);
+
+        float[] outputs = locals.neat.getCurOutput();
+
+        if (outputs[0] > 0.5){
+            locals.player.shoot();
+        }
+        if (outputs[1] >=0.5){
+            locals.player.turnLeft();
+        }
+        if (outputs[2] >= 0.5){
+            locals.player.turnRight();
+        }
+        if (outputs[3] >= 0.5){
+            locals.player.accelerate = true;
+            locals.player.accelerate();
+        }
+        else{
+            locals.player.accelerate = false;
+        }
+
+        // for(float f : outputs){
+        //     System.out.print(f + ", ");
+        // }
+        // System.out.print( "\n");
+
+    }
+
 }

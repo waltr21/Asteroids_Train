@@ -13,13 +13,11 @@ public class Network implements Serializable, Comparable<Network>{
     float bias;
     Random r;
     double fitness, genFitness;
-    Object agent;
 
-    public Network(int numInputs, int numOutputs, Object a){
+    public Network(int numInputs, int numOutputs){
         idCount = 0;
         bias = 1.0f;
         fitness = 0.0;
-        agent = a;
         inputs = new ArrayList<Neuron>();
         outputs = new ArrayList<Neuron>();
         hidden = new ArrayList<Neuron>();
@@ -42,14 +40,16 @@ public class Network implements Serializable, Comparable<Network>{
         initConnections();
     }
 
-    public Network(ArrayList<Neuron> inputs, ArrayList<Neuron> hidden, ArrayList<Neuron> outputs, float bias, int idCount, Object agent){
+    public Network(ArrayList<Neuron> inputs, ArrayList<Neuron> hidden, ArrayList<Neuron> outputs, float bias, int idCount){
         this.inputs = inputs;
         this.outputs = outputs;
         this.hidden = hidden;
 
         this.bias = bias;
         this.idCount = idCount;
-        this.agent = agent;
+        fitness = 0.0;
+        r = new Random();
+
     }
 
     private void initConnections(){
@@ -70,6 +70,8 @@ public class Network implements Serializable, Comparable<Network>{
         validNodes.addAll(outputs);
         validNodes.addAll(hidden);
 
+        // System.out.println("add node: " + validNodes.size());
+
         //Grab a random node to manipulate connection.
         int index = r.nextInt(validNodes.size());
         Neuron randNode = validNodes.get(index);
@@ -86,7 +88,7 @@ public class Network implements Serializable, Comparable<Network>{
         randNode.addConnection(tempHidden, randConnection.weight);
         hidden.add(tempHidden);
 
-        System.out.println("Adding node " + tempHidden.getID() +  " --> " + randConnection.neuron.getID() + " - " + randNode.getID());
+        // System.out.println("Adding node " + tempHidden.getID() +  " --> " + randConnection.neuron.getID() + " - " + randNode.getID());
 
         //Set the layer of this node to its output + 1
         // tempHidden.setLayer(randNode.getLayer() + 1);
@@ -95,6 +97,10 @@ public class Network implements Serializable, Comparable<Network>{
     public void addRandConnection(Neuron node){
         ArrayList<Neuron> validConnections = new ArrayList<Neuron>();
         validConnections.addAll(hidden);
+
+        // System.out.println(validConnections);
+        if (validConnections.size() < 1)
+            return;
 
         //Grab a hidden to make a new input.
         int index = r.nextInt(validConnections.size());
@@ -105,7 +111,7 @@ public class Network implements Serializable, Comparable<Network>{
             if  (!checkRepeat(node, randHidden)){
                 node.addConnection(randHidden);
                 if (!checkDeadlock(node, node)){
-                    System.out.println("Setting connection: " + randHidden.getID() + " --> " +  node.getID());
+                    // System.out.println("Setting connection: " + randHidden.getID() + " --> " +  node.getID());
                     break;
                 }
                 else{
@@ -115,13 +121,26 @@ public class Network implements Serializable, Comparable<Network>{
 
             validConnections.remove(randHidden);
             if (validConnections.size() < 1){
-                System.out.println("No valid connection to make for: " + node.getID());
+                // System.out.println("No valid connection to make for: " + node.getID());
                 break;
             }
 
             index = r.nextInt(validConnections.size());
             randHidden = validConnections.get(index);
         }
+    }
+
+    public void addRandConnection(){
+        ArrayList<Neuron> validConnections = getConnectionNodes();
+        Neuron n = validConnections.get(r.nextInt(validConnections.size()));
+        addRandConnection(n);
+    }
+
+    public ArrayList<Neuron> getConnectionNodes(){
+        ArrayList<Neuron> validConnections = new ArrayList<Neuron>();
+        validConnections.addAll(hidden);
+        validConnections.addAll(outputs);
+        return validConnections;
     }
 
     public boolean checkDeadlock(Neuron node, Neuron cur){
@@ -143,6 +162,17 @@ public class Network implements Serializable, Comparable<Network>{
             }
         }
         return false;
+    }
+
+    public void mutateWeight(){
+        ArrayList<Neuron> validConnections = new ArrayList<Neuron>();
+        validConnections.addAll(hidden);
+        validConnections.addAll(outputs);
+
+        Neuron n = validConnections.get(r.nextInt(validConnections.size()));
+        Connection c = n.getConnections().get(r.nextInt(n.getConnections().size()));
+
+        c.randomizeWeight();
     }
 
     public void runNetwork(float[] initInputs){
@@ -234,12 +264,12 @@ public class Network implements Serializable, Comparable<Network>{
             }
         }
 
-        return new Network(tempInputs, tempHidden, tempOutputs, this.bias, this.idCount, this.agent);
+        return new Network(tempInputs, tempHidden, tempOutputs, this.bias, this.idCount);
     }
 
     public boolean saveToFile(String s){
         try{
-            FileOutputStream fos = new FileOutputStream(s + ".net");
+            FileOutputStream fos = new FileOutputStream(s);
     		ObjectOutputStream oos = new ObjectOutputStream(fos);
     		oos.writeObject(this);
     		oos.close();
@@ -253,7 +283,7 @@ public class Network implements Serializable, Comparable<Network>{
 
     public static Network loadFromFile(String s){
         try{
-            FileInputStream fis = new FileInputStream(s + ".net");
+            FileInputStream fis = new FileInputStream(s);
     		ObjectInputStream ois = new ObjectInputStream(fis);
     		Network n = (Network) ois.readObject();
     		ois.close();
@@ -285,24 +315,24 @@ public class Network implements Serializable, Comparable<Network>{
     }
 
     public static void main(String[] args){
-        Locals l = new Locals();
-        Network n = new Network(3, 2, l);
-
-
-        float[] inputs = {0.4f, 0.9f, 0.33f};
-        n.runNetwork(inputs);
-        for (float i : n.getSimpleOutput()){
-            System.out.print(i + ", ");
-        }
-        System.out.println("\n------------------------------------------");
-        n.saveToFile("test");
-
-        Network nCopy = Network.loadFromFile("test");
-
-        for (float i : nCopy.getSimpleOutput()){
-            System.out.print(i + ", ");
-        }
-        System.out.println("");
+        // Locals l = new Locals();
+        // Network n = new Network(3, 2, l);
+        //
+        //
+        // float[] inputs = {0.4f, 0.9f, 0.33f};
+        // n.runNetwork(inputs);
+        // for (float i : n.getSimpleOutput()){
+        //     System.out.print(i + ", ");
+        // }
+        // System.out.println("\n------------------------------------------");
+        // n.saveToFile("test");
+        //
+        // Network nCopy = Network.loadFromFile("test");
+        //
+        // for (float i : nCopy.getSimpleOutput()){
+        //     System.out.print(i + ", ");
+        // }
+        // System.out.println("");
 
         // Network n = new Network(3, 2);
         // float[] inputs = {0.4f, 0.9f, 0.33f};
