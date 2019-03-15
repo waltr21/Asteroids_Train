@@ -7,7 +7,7 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 1;
+        locals.level = 7;
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
         n = new Simple_NEAT(19,4);
@@ -85,9 +85,11 @@ public class GameScene{
             inputs[c] = (float) s.getWeightValue();
             c++;
         }
-        inputs[16] = (float) locals.player.getX() / locals.player.width;
-        inputs[17] = (float) locals.player.getY() / locals.player.height;
+        inputs[16] = (float) locals.player.getX() / 900;
+        inputs[17] = (float) locals.player.getY() / 900;
         inputs[18] = (float) locals.player.bullets.size() / 4;
+        
+        n.runCurrent(inputs);
 
         float[] outputs = n.getCurOutput();
 

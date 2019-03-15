@@ -14,7 +14,7 @@ public class Simple_NEAT{
         numInputs = nI;
         numOutputs = nO;
         genNum = 0;
-        keepBest = false;
+        keepBest = true;
         agents = new ArrayList<Network>();
         mutationRate = 0.60;
     }
@@ -67,6 +67,7 @@ public class Simple_NEAT{
         ArrayList<Network> nextGen = new ArrayList<Network>();
         if (keepBest){
             popSize = agents.size() - 1;
+            nextGen.add(getBestFit().copy());
         }
         else
             popSize = agents.size();
