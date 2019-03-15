@@ -221,7 +221,7 @@ public class Ship{
     }
 
     private void shoot(){
-        if (bullets.size() < 40 && !dead){
+        if (bullets.size() < 4 && !dead){
             addBullet(new Bullet(x, y, angle, locals));
         }
     }

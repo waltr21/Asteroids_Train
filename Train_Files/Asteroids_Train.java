@@ -13,7 +13,7 @@ public class Asteroids_Train{
 
     public Asteroids_Train(){
         setup();
-        neat = new Simple_NEAT(18, 4);
+        neat = new Simple_NEAT(19, 4);
         locals.neat = neat;
         for (int i = 0; i < 60; i++){
             neat.addAgent();
@@ -27,7 +27,7 @@ public class Asteroids_Train{
         locals.player = new Ship(locals);
         locals.asteroids = new ArrayList<Asteroid>();
         locals.GS = new GameScene(locals);
-        locals.level = 5;
+        locals.level = 7;
     }
 
     private void draw(){
@@ -68,8 +68,8 @@ public class Asteroids_Train{
             printBest(i);
             if(i != count)
                 neat.breed();
-            if(i % 50 == 0)
-                locals.level++;
+            // if(i % 50 == 0)
+            //     locals.level++;
         }
         neat.getBestFit().saveToFile("best.net");
     }
