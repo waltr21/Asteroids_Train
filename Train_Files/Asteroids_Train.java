@@ -48,7 +48,7 @@ public class Asteroids_Train{
                 frameCount++;
             }
 
-            int curFit = locals.player.getScore() * frameCount;
+            int curFit = locals.player.getScore();
             // System.out.println(locals.player.getAccuracy());
             curFit += curFit * locals.player.getAccuracy();
             if (totalFrames - frameCount < 5)
