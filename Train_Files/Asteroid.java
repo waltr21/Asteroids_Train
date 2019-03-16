@@ -76,7 +76,7 @@ public class Asteroid{
     }
 
     public void explode(){
-        locals.player.numHits++;
+        locals.player.numHits = locals.player.numHits + 1;
         if (level > 1){
 
             for (int i = 0; i < 2; i++){

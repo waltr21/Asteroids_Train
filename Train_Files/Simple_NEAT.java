@@ -116,11 +116,14 @@ public class Simple_NEAT{
             //Should we mutate this agent?
             if (mutationRate >= num){
                 num = ThreadLocalRandom.current().nextDouble(0,1);
-                if (num <= 1/3){
+                if (num <= 1/4){
                     a.addRandHiddenNode();
                 }
-                else if(num > 1/3 && num <= 2/3){
+                else if(num > 1/4 && num <= 2/4){
                     a.addRandConnection();
+                }
+                else if(num > 2/4 && num <= 3/4){
+                    a.remvoveRandConnection();
                 }
                 else{
                     a.mutateWeight();

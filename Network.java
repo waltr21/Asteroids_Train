@@ -175,6 +175,17 @@ public class Network implements Serializable, Comparable<Network>{
         c.randomizeWeight();
     }
 
+    public void remvoveRandConnection(){
+        ArrayList<Neuron> validConnections = new ArrayList<Neuron>();
+        validConnections.addAll(hidden);
+        validConnections.addAll(outputs);
+        Neuron n = validConnections.get(r.nextInt(validConnections.size()));
+
+        Connection c = n.getConnections().get(r.nextInt(n.getConnections().size()));
+        n.removeConnection(c);
+
+    }
+
     public void runNetwork(float[] initInputs){
         if (initInputs.length !=  inputs.size()){
             System.out.println("Error: Input mismatch...");
@@ -269,7 +280,7 @@ public class Network implements Serializable, Comparable<Network>{
 
     public boolean saveToFile(String s){
         try{
-            FileOutputStream fos = new FileOutputStream(s + ".net");
+            FileOutputStream fos = new FileOutputStream(s);
     		ObjectOutputStream oos = new ObjectOutputStream(fos);
     		oos.writeObject(this);
     		oos.close();

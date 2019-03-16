@@ -49,14 +49,14 @@ public class Asteroids_Train{
             }
 
             int curFit = locals.player.getScore() * frameCount;
+            // System.out.println(locals.player.getAccuracy());
             curFit += curFit * locals.player.getAccuracy();
             neat.setFitness(i, curFit);
             // System.out.println(c + " --> " + frameCount + " - " + locals.player.getScore());
             // System.out.print(String.format("\033[%dA",1)); // Move up
             // System.out.print("\033[2K"); // Erase line content
             c++;
-            locals.player.resetPos();
-            locals.player.resetVars();
+            locals.player = new Ship(locals);
         }
     }
 

@@ -89,7 +89,7 @@ public class Ship{
     public double getAccuracy(){
         if (numShots == 0)
             return 0;
-        return numHits / numShots;
+        return numHits / (numShots * 1.0);
     }
 
     /**
