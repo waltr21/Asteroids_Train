@@ -5,7 +5,7 @@ public class Sensor{
     private Locals locals;
 
     public Sensor(double angle, Locals l){
-        this.length = 200;
+        this.length = 350;
         this.angle = angle;
         this.weightValue = 0.0;
         locals = l;
