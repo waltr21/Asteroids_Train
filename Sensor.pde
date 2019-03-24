@@ -5,7 +5,7 @@ public class Sensor{
     private Locals locals;
 
     public Sensor(double angle, Locals l){
-        this.length = 200;
+        this.length = 350;
         this.angle = angle;
         this.weightValue = 0.0;
         locals = l;
@@ -34,8 +34,9 @@ public class Sensor{
             double t = (2*c) / ((-1*b) + Math.sqrt(square(b) - (4 * a * c)));
 
             if(t > 0 && t < 1 && square(b) - (4 * a * c) > 0){
-                if (1 - t > weightValue){
-                    weightValue = 1-t;
+                double tempWeight = (1-t) * 0.3 * ast.getLevel();
+                if (tempWeight > weightValue){
+                    weightValue = tempWeight;
                     iX = intersectX(x0, x1, t);
                     iY = intersectY(y0, y1, t);
                 }

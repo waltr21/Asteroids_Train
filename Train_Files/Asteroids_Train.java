@@ -27,7 +27,7 @@ public class Asteroids_Train{
         locals.player = new Ship(locals);
         locals.asteroids = new ArrayList<Asteroid>();
         locals.GS = new GameScene(locals);
-        locals.level = 5;
+        locals.level = 4;
     }
 
     private void draw(){

@@ -7,10 +7,10 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 10;
+        locals.level = 4;
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
-        n = new Simple_NEAT(19,4);
+        n = new Simple_NEAT(17,4);
         Network temp  = Network.loadFromFile("C:/Users/WALTR/Downloads/CODE/Processing/Asteroids_Train/best.net");
         n.addAgent(temp);
         n.setCurrentAgent(0);
@@ -79,16 +79,14 @@ public class GameScene{
     }
 
     public void runNetwork(){
-        float[] inputs = new float[19];
+        float[] inputs = new float[17];
         int c = 0;
         for (Sensor s : locals.player.getSensors()){
             inputs[c] = (float) s.getWeightValue();
             c++;
         }
-        inputs[16] = (float) locals.player.getX() / 900;
-        inputs[17] = (float) locals.player.getY() / 900;
-        inputs[18] = (float) locals.player.bullets.size() / 4;
-        
+        inputs[16] = (float) locals.player.bullets.size() / 4;
+
         n.runCurrent(inputs);
 
         float[] outputs = n.getCurOutput();
@@ -109,7 +107,7 @@ public class GameScene{
         else{
             locals.player.accelerate = false;
         }
-        
+
         String outs = "";
         for(float f : outputs){
             outs +=(f + ", ");
