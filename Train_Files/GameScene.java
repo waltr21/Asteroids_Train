@@ -73,14 +73,18 @@ public class GameScene{
     }
 
     public void runNetwork(){
-        float[] inputs = new float[17];
+        float[] inputs = new float[33];
         int c = 0;
         for (Sensor s : locals.player.getSensors()){
             inputs[c] = (float) s.getWeightValue();
             c++;
         }
+        for (Sensor s : locals.player.getSensors()){
+            inputs[c] = (float) s.getLevelValue();
+            c++;
+        }
 
-        inputs[16] = (float) locals.player.bullets.size() / 4;
+        inputs[32] = (float) locals.player.bullets.size() / 4;
 
         locals.neat.runCurrent(inputs);
 

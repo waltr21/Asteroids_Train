@@ -13,9 +13,9 @@ public class Asteroids_Train{
 
     public Asteroids_Train(){
         setup();
-        neat = new Simple_NEAT(17, 4);
+        neat = new Simple_NEAT(33, 4);
         locals.neat = neat;
-        for (int i = 0; i < 60; i++){
+        for (int i = 0; i < 120; i++){
             neat.addAgent();
         }
     }
@@ -32,14 +32,14 @@ public class Asteroids_Train{
 
     private void draw(){
         locals.GS.show();
-        System.out.println(locals.player.score + " - " + locals.player.dead);
+        // System.out.println(locals.player.score + " - " + locals.player.dead);
     }
 
     private void runAll(){
         int totalFrames = 30 * 60;
         int c = 0;
         for (int i = 0; i < 60; i++){
-            locals.GS.resetAstroids(locals.level);
+            locals.GS.resetAstroids(4);
             neat.setCurrentAgent(i);
             int frameCount = 0;
 
@@ -77,8 +77,8 @@ public class Asteroids_Train{
     }
 
     public void printBest(int gen){
-        // System.out.print(String.format("\033[%dA",1)); // Move up
-        // // System.out.print("\033[2K");
+        System.out.print(String.format("\033[%dA",1)); // Move up
+        System.out.print("\033[2K");
         System.out.println(String.format("Generation: %d / best fit: %f", gen ,neat.getBestFit().getFitness()));
     }
 

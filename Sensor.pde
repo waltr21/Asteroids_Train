@@ -1,13 +1,14 @@
 import java.lang.Math;
 
 public class Sensor{
-    private double length, angle, weightValue;
+    private double length, angle, weightValue, levelValue;
     private Locals locals;
 
     public Sensor(double angle, Locals l){
         this.length = 350;
         this.angle = angle;
         this.weightValue = 0.0;
+        this.levelValue = 0.0;
         locals = l;
     }
 
@@ -27,6 +28,7 @@ public class Sensor{
         double iX = 0.0;
         double iY = 0.0;
         weightValue = 0;
+        levelValue = 0;
 
         for (Asteroid ast : locals.asteroids){
             double b = 2 * (x1-x0) * (x0 - ast.getX()) + 2 * (y1-y0) * (y0 - ast.getY());
@@ -34,9 +36,9 @@ public class Sensor{
             double t = (2*c) / ((-1*b) + Math.sqrt(square(b) - (4 * a * c)));
 
             if(t > 0 && t < 1 && square(b) - (4 * a * c) > 0){
-                double tempWeight = (1-t) * 0.3 * ast.getLevel();
-                if (tempWeight > weightValue){
-                    weightValue = tempWeight;
+                if (1 - t > weightValue){
+                    weightValue = 1-t;
+                    levelValue = ast.getLevel() * 0.333;
                     iX = intersectX(x0, x1, t);
                     iY = intersectY(y0, y1, t);
                 }
@@ -66,5 +68,9 @@ public class Sensor{
 
     public double getWeightValue(){
         return weightValue;
+    }
+
+    public double getLevelValue(){
+        return levelValue;
     }
 }
