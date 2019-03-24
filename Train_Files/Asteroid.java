@@ -22,7 +22,7 @@ public class Asteroid{
         locals = l;
         this.x = x;
         this.y = y;
-        this.size = 30 *level;
+        this.size = 40 *level;
         this.level = level;
         this.maxLevel = 3;
         this.angle = ThreadLocalRandom.current().nextDouble(-PI, PI);

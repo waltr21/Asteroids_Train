@@ -27,7 +27,7 @@ public class Asteroids_Train{
         locals.player = new Ship(locals);
         locals.asteroids = new ArrayList<Asteroid>();
         locals.GS = new GameScene(locals);
-        locals.level = 7;
+        locals.level = 5;
     }
 
     private void draw(){
@@ -43,16 +43,16 @@ public class Asteroids_Train{
             neat.setCurrentAgent(i);
             int frameCount = 0;
 
-            while(frameCount < totalFrames && !locals.player.dead){
+            while(!locals.player.dead){
                 locals.GS.show();
                 frameCount++;
             }
 
-            int curFit = locals.player.getScore();
+            double curFit = locals.player.getScore();
             // System.out.println(locals.player.getAccuracy());
-            curFit += curFit * locals.player.getAccuracy();
-            if (totalFrames - frameCount < 5)
-                curFit *= 2;
+            curFit = curFit * locals.player.getAccuracy();
+            // if (totalFrames - frameCount < 5)
+            //     curFit *= 2;
             neat.setFitness(i, curFit);
             // System.out.println(c + " --> " + frameCount + " - " + locals.player.getScore());
             // System.out.print(String.format("\033[%dA",1)); // Move up

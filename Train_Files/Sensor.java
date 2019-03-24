@@ -34,8 +34,9 @@ public class Sensor{
             double t = (2*c) / ((-1*b) + Math.sqrt(square(b) - (4 * a * c)));
 
             if(t > 0 && t < 1 && square(b) - (4 * a * c) > 0){
-                if (1 - t > weightValue){
-                    weightValue = 1-t;
+                double tempWeight = (1-t) * 0.3 * ast.getLevel();
+                if (tempWeight > weightValue){
+                    weightValue = tempWeight;
                     iX = intersectX(x0, x1, t);
                     iY = intersectY(y0, y1, t);
                 }
