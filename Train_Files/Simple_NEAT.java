@@ -145,6 +145,15 @@ public class Simple_NEAT{
         return best;
     }
 
+    public double getAvgFit(){
+        double sum = 0;
+
+        for (Network n : agents){
+            sum+=n.getFitness();
+        }
+        return sum/agents.size();
+    }
+
     public Network getNetwork(int i){
         return agents.get(i);
     }
