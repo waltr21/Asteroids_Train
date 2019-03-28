@@ -253,7 +253,7 @@ public class Ship{
             pushMatrix();
             //Display the bullets
             showBullets();
-            showSensors();
+            //showSensors();
 
             //Edit pos of the ship.
             turn();

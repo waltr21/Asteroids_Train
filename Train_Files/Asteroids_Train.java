@@ -91,7 +91,7 @@ public class Asteroids_Train{
 		}
 		int percent = (int) (gen / (total * 1.0) * 100);
         System.out.println(String.format("Generation: %d / best fit: %f", gen ,neat.getBestFit().getFitness()));
-		System.out.println("Progress: " + Colors.GREEN + percent + "%" + Colors.RESET);	
+		System.out.println("Progress: " + Colors.GREEN + percent + "%" + Colors.RESET);
 		System.out.println("Time Remaining: " + Colors.YELLOW + timeRemain(gen , total) + Colors.RESET);
 	}
 
@@ -102,11 +102,11 @@ public class Asteroids_Train{
 		}
 	}
 
-	public String timeRemain(int gen, int total){		
+	public String timeRemain(int gen, int total){
 		long tempStamp = System.currentTimeMillis();
 		long passed = tempStamp - stamp;
 		timeSum += passed;
-		
+
 		if (gen % 10 == 0){
 			curAvgTime = (double) timeSum / 10.0;
 			timeSum = 0;

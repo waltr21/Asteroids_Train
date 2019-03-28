@@ -4,16 +4,18 @@ public class GameScene{
     boolean online;
     Locals locals;
     Simple_NEAT n;
+    Grid gameGrid;
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 4;
+        locals.level = 3;
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
         n = new Simple_NEAT(33,4);
-        Network temp  = Network.loadFromFile("C:/Users/WALTR/Downloads/CODE/Processing/Asteroids_Train/best.net");
+        Network temp  = Network.loadFromFile("/Users/ryanwalt/Downloads/CODE/Java/Processing/Asteroids_Train/best.net");
         n.addAgent(temp);
         n.setCurrentAgent(0);
+        gameGrid = new Grid(50, l);
     }
 
     /**
@@ -73,9 +75,10 @@ public class GameScene{
         showText();
         // locals.player.showBullets();
         locals.player.show();
-        runNetwork();
+        // runNetwork();
         showAsteroids();
         checkLevel();
+        gameGrid.show();
     }
 
     public void runNetwork(){
@@ -105,7 +108,7 @@ public class GameScene{
         if (outputs[2] >= 0.5){
             locals.player.turnRight();
         }
-        if (outputs[3] >= 0.5){
+        if (outputs[3] <= 0.5){
             locals.player.accelerate = true;
             locals.player.accelerate();
         }
