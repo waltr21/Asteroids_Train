@@ -3,11 +3,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class GameScene{
     boolean online;
     Locals locals;
+    Grid gameGrid;
 
     public GameScene(Locals l){
         locals = l;
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
+        gameGrid = new Grid(50, l);
     }
 
     /**
@@ -73,18 +75,16 @@ public class GameScene{
     }
 
     public void runNetwork(){
-        float[] inputs = new float[33];
-        int c = 0;
-        for (Sensor s : locals.player.getSensors()){
-            inputs[c] = (float) s.getWeightValue();
-            c++;
+        float[] inputs = new float[gameGrid.getWidth() * gameGrid.getWidth() + 3];
+        inputs[0] = (float) locals.player.getX() / (float) 900.0;
+        inputs[1] = (float) locals.player.getY() / (float) 900.0;
+        inputs[2] = (float) locals.player.getAngle() / (float) (2*3.14159265359);
+        int c = 3;
+        for (int x = 0; x < gameGrid.getGrid().length; x++){
+            for (int y = 0; y < gameGrid.getGrid().length; y++){
+                inputs[c] = (float) gameGrid.getGrid()[x][y];
+            }
         }
-        for (Sensor s : locals.player.getSensors()){
-            inputs[c] = (float) s.getLevelValue();
-            c++;
-        }
-
-        inputs[32] = (float) locals.player.bullets.size() / 4;
 
         locals.neat.runCurrent(inputs);
 

@@ -17,7 +17,7 @@ public class Asteroids_Train{
     public Asteroids_Train(){
         setup();
 		numAgents = 80;
-        neat = new Simple_NEAT(33, 4);
+        neat = new Simple_NEAT(18 * 18 + 3, 4);
         locals.neat = neat;
         for (int i = 0; i < numAgents; i++){
             neat.addAgent();

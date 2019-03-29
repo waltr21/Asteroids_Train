@@ -10,12 +10,12 @@ public class GameScene{
         locals = l;
         locals.level = 3;
         resetAstroids(locals.level);
+        gameGrid = new Grid(50, l);
         locals.player = new Ship(locals);
-        n = new Simple_NEAT(33,4);
+        n = new Simple_NEAT(gameGrid.getWidth() * gameGrid.getWidth() + 3, 4);
         Network temp  = Network.loadFromFile("/Users/ryanwalt/Downloads/CODE/Java/Processing/Asteroids_Train/best.net");
         n.addAgent(temp);
         n.setCurrentAgent(0);
-        gameGrid = new Grid(50, l);
     }
 
     /**
@@ -75,7 +75,7 @@ public class GameScene{
         showText();
         // locals.player.showBullets();
         locals.player.show();
-        // runNetwork();
+        runNetwork2();
         showAsteroids();
         checkLevel();
         gameGrid.show();
@@ -100,6 +100,48 @@ public class GameScene{
         float[] outputs = n.getCurOutput();
 
        if (outputs[0] > 0.5){
+            locals.player.shoot();
+        }
+        if (outputs[1] >=0.5){
+            locals.player.turnLeft();
+        }
+        if (outputs[2] >= 0.5){
+            locals.player.turnRight();
+        }
+        if (outputs[3] <= 0.5){
+            locals.player.accelerate = true;
+            locals.player.accelerate();
+        }
+        else{
+            locals.player.accelerate = false;
+        }
+
+        String outs = "";
+        for(float f : outputs){
+            outs +=(f + ", ");
+        }
+        textSize(20);
+        text(outs, width/2, height-50);
+
+    }
+
+    public void runNetwork2(){
+        float[] inputs = new float[gameGrid.getWidth() * gameGrid.getWidth() + 3];
+        inputs[0] = (float) locals.player.getX() / 900.0;
+        inputs[1] = (float) locals.player.getY() / 900.0;
+        inputs[2] = (float) locals.player.getAngle() / (2*3.14159265359);
+        int c = 3;
+        for (int x = 0; x < gameGrid.getGrid().length; x++){
+            for (int y = 0; y < gameGrid.getGrid().length; y++){
+                inputs[c] = (float) gameGrid.getGrid()[x][y];
+            }
+        }
+
+        n.runCurrent(inputs);
+
+        float[] outputs = n.getCurOutput();
+
+        if (outputs[0] > 0.5){
             locals.player.shoot();
         }
         if (outputs[1] >=0.5){

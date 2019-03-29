@@ -58,31 +58,7 @@ public class Grid{
     }
 
     public void show(){
-        float squareSize = 200;
-
-        stroke(255);
-        fill(0, 0, 0);
-        rect(10, 10, squareSize, squareSize);
-
-        float subSize = squareSize / grid.length;
-
         setAsteroids();
-        for (int x = 0; x < grid.length; x++){
-            for (int y = 0; y < grid.length; y++){
-                if (grid[x][y] > 0){
-                    fill(255);
-                    noStroke();
-                    rectMode(CORNER);
-                    rect(10 + subSize * x, 10 + subSize * y, subSize, subSize);
-                }
-                if (grid[x][y] < 0){
-                    fill(255, 0, 0);
-                    noStroke();
-                    rectMode(CORNER);
-                    rect(10 + subSize * x, 10 + subSize * y, subSize, subSize);
-                }
-            }
-        }
     }
 
     public int getWidth(){
