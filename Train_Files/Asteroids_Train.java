@@ -17,7 +17,7 @@ public class Asteroids_Train{
     public Asteroids_Train(){
         setup();
 		numAgents = 80;
-        neat = new Simple_NEAT(18 * 18 + 3, 4);
+        neat = new Simple_NEAT((18 * 18) + 1, 4);
         locals.neat = neat;
         for (int i = 0; i < numAgents; i++){
             neat.addAgent();
@@ -43,23 +43,30 @@ public class Asteroids_Train{
     }
 
     private void runAll(){
-        int totalFrames = 180 * 60;
+        int totalFrames = 45 * 60;
         int c = 0;
         for (int i = 0; i < numAgents; i++){
-            locals.GS.resetAstroids(4);
+            locals.GS.resetAstroids(1);
             neat.setCurrentAgent(i);
             int frameCount = 0;
+			boolean longLive = false;
 
             while(!locals.player.dead){
                 locals.GS.show();
                 frameCount++;
-				if (frameCount > totalFrames)
+				if (frameCount > totalFrames){
+					longLive = true;
 					break;
+				}
             }
 
             double curFit = locals.player.getScore();
             //System.out.println("Accuracy: " + locals.player.getAccuracy() + "  Score: " + curFit);
             curFit = curFit * locals.player.getAccuracy();
+			if(longLive){
+				curFit *= 2;
+			}
+			//curFit += locals.player.avoids * 2;
             // if (totalFrames - frameCount < 5)
             //     curFit *= 2;
             neat.setFitness(i, curFit);
@@ -90,7 +97,7 @@ public class Asteroids_Train{
         	removeLine(3);
 		}
 		int percent = (int) (gen / (total * 1.0) * 100);
-        System.out.println(String.format("Generation: %d / best fit: %f", gen ,neat.getBestFit().getFitness()));
+        System.out.println(String.format("Generation: %d / AVG fit: %f", gen ,neat.getAvgFit()));
 		System.out.println("Progress: " + Colors.GREEN + percent + "%" + Colors.RESET);
 		System.out.println("Time Remaining: " + Colors.YELLOW + timeRemain(gen , total) + Colors.RESET);
 	}

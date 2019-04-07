@@ -175,6 +175,15 @@ public class Network implements Serializable, Comparable<Network>{
         c.randomizeWeight();
     }
 
+    public void mutateBiasWeight(){
+        ArrayList<Neuron> validConnections = new ArrayList<Neuron>();
+        validConnections.addAll(hidden);
+        validConnections.addAll(outputs);
+
+        Neuron n = validConnections.get(r.nextInt(validConnections.size()));
+        n.randomizeBiasWeight();
+    }
+
     public void remvoveRandConnection(){
         ArrayList<Neuron> validConnections = new ArrayList<Neuron>();
         validConnections.addAll(hidden);

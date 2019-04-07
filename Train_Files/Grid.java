@@ -24,6 +24,7 @@ public class Grid{
 
     private void setAsteroids(){
         resetGrid();
+		//System.out.println(l.asteroids.size());
         for (Asteroid a : l.asteroids){
             int xCell = (int) (a.getX() / cellWidth);
             int yCell = (int) (a.getY() / cellWidth);
@@ -38,7 +39,7 @@ public class Grid{
             if (yCell < 0)
                 yCell = 0;
 
-            grid[xCell][yCell] = a.getLevel() * 0.33;
+            grid[xCell][yCell] = 1.0;
         }
 
         int xCell = (int) (l.player.getX() / cellWidth);

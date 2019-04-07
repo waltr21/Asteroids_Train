@@ -8,7 +8,7 @@ public class Ship{
     ArrayList<Sensor> sensors;
     boolean turn, accelerate, dead, noHit;
     long timeStamp;
-    int k, numShots, numHits;
+    int k, numShots, numHits, avoids;
     int lives, maxLives, score;
     Vector velocity;
     final double PI = 3.14159265359;
@@ -37,6 +37,7 @@ public class Ship{
         this.maxLives = 1;
         this.lives = maxLives;
         this.score = 0;
+		this.avoids = 0;
         //ArrayList for the current pressed characters.
         //(Mainly used for making turning less janky.)
         this.pressedChars = new ArrayList<Integer>();

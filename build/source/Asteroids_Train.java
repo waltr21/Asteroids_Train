@@ -149,6 +149,10 @@ public class Asteroid{
         if (distance < size/2 + locals.player.getSize()){
             locals.player.setHit();
         }
+
+        if (distance < 100 + (size/2) && locals.player.accelerate){
+            locals.player.avoids = locals.player.avoids + 1;
+        }
     }
 
     public void explode(){
@@ -326,11 +330,11 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 3;
+        locals.level = 1;
         resetAstroids(locals.level);
         gameGrid = new Grid(50, l);
         locals.player = new Ship(locals);
-        n = new Simple_NEAT(gameGrid.getWidth() * gameGrid.getWidth() + 3, 4);
+        n = new Simple_NEAT(gameGrid.getWidth() * gameGrid.getWidth() + 1, 4);
         Network temp  = Network.loadFromFile("/Users/ryanwalt/Downloads/CODE/Java/Processing/Asteroids_Train/best.net");
         n.addAgent(temp);
         n.setCurrentAgent(0);
@@ -444,14 +448,14 @@ public class GameScene{
     }
 
     public void runNetwork2(){
-        float[] inputs = new float[gameGrid.getWidth() * gameGrid.getWidth() + 3];
-        inputs[0] = (float) locals.player.getX() / 900.0f;
-        inputs[1] = (float) locals.player.getY() / 900.0f;
-        inputs[2] = (float) locals.player.getAngle() / (2*3.14159265359f);
-        int c = 3;
+        float[] inputs = new float[gameGrid.getWidth() * gameGrid.getWidth() + 1];
+        inputs[0] = (float) locals.player.getAngle() / (2*3.14159265359f);
+        int c = 1;
         for (int x = 0; x < gameGrid.getGrid().length; x++){
             for (int y = 0; y < gameGrid.getGrid().length; y++){
                 inputs[c] = (float) gameGrid.getGrid()[x][y];
+                // System.out.println(c + " - " + (float) gameGrid.getGrid()[x][y]);
+                c++;
             }
         }
 
@@ -459,16 +463,16 @@ public class GameScene{
 
         float[] outputs = n.getCurOutput();
 
-        if (outputs[0] > 0.5f){
+        if (outputs[0] > 0.0f){
             locals.player.shoot();
         }
-        if (outputs[1] >=0.5f){
+        if (outputs[1] > 0.0f){
             locals.player.turnLeft();
         }
-        if (outputs[2] >= 0.5f){
+        if (outputs[2] >  0.0f){
             locals.player.turnRight();
         }
-        if (outputs[3] <= 0.5f){
+        if (outputs[3] > 0.0f){
             locals.player.accelerate = true;
             locals.player.accelerate();
         }
@@ -525,7 +529,7 @@ public class Grid{
             if (yCell < 0)
                 yCell = 0;
 
-            grid[xCell][yCell] = a.getLevel() * 0.33f;
+            grid[xCell][yCell] = 1.0f;
         }
 
         int xCell = (int) (l.player.getX() / cellWidth);
@@ -594,6 +598,34 @@ public class Locals{
     public Locals(){
         width = 900;
         height = 900;
+    }
+}
+public class NetworkView{
+    Network net;
+    ArrayList<Node> nodes;
+
+    public NetworkView(Network net){
+        this.net = net;
+    }
+
+    private void initNodes(){
+        // for (Neuron n : net.getInputs()){
+        //     break;
+        // }
+    }
+
+    public void show(){
+        return;
+    }
+}
+
+
+class Node{
+    float x, y;
+
+    public Node(float x, float y){
+        this.x = x;
+        this.y = y;
     }
 }
 
@@ -683,7 +715,7 @@ public class Ship{
     boolean turn, accelerate, dead, noHit;
     long timeStamp;
     int k;
-    int lives, maxLives, score;
+    int lives, maxLives, score, avoids;
     Vector velocity;
     final double PI = 3.14159265359f;
     Locals locals;
@@ -709,6 +741,7 @@ public class Ship{
         this.maxLives = 1;
         this.lives = maxLives;
         this.score = 0;
+        this.avoids = 0;
         //ArrayList for the current pressed characters.
         //(Mainly used for making turning less janky.)
         this.pressedChars = new ArrayList<Integer>();

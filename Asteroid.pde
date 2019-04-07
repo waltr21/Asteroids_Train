@@ -71,6 +71,10 @@ public class Asteroid{
         if (distance < size/2 + locals.player.getSize()){
             locals.player.setHit();
         }
+
+        if (distance < 100 + (size/2) && locals.player.accelerate){
+            locals.player.avoids = locals.player.avoids + 1;
+        }
     }
 
     public void explode(){

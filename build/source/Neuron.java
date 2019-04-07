@@ -62,8 +62,10 @@ public class Neuron implements Serializable{
     }
 
     public void activate(){
-        float d = (float) Math.pow((double) Math.exp(1.0),(double) sum());
-        value = (float) (1.0/(1+d));
+		float sum = sum();
+		float n = (float) Math.pow((double) Math.exp(1.0), (double) sum) - (float) Math.pow((double) Math.exp(1.0), (double) -sum);
+        float d = (float) Math.pow((double) Math.exp(1.0), (double) sum) + (float) Math.pow((double) Math.exp(1.0), (double) -sum);
+        value = (float) (n/d);
         activated = true;
     }
 
@@ -128,6 +130,10 @@ public class Neuron implements Serializable{
                 return;
             }
         }
+    }
+
+    public void randomizeBiasWeight(){
+        this.biasWeight = r.nextFloat();
     }
 
     public static void main(String[] args){

@@ -22,7 +22,7 @@ public class Simple_NEAT{
     public void addAgent(){
         agents.add(new Network(numInputs, numOutputs));
     }
-    
+
     public void addAgent(Network n){
         agents.add(n);
     }

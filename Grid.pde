@@ -38,7 +38,7 @@ public class Grid{
             if (yCell < 0)
                 yCell = 0;
 
-            grid[xCell][yCell] = a.getLevel() * 0.33;
+            grid[xCell][yCell] = 1.0;
         }
 
         int xCell = (int) (l.player.getX() / cellWidth);

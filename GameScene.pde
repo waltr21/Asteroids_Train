@@ -8,11 +8,11 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 3;
+        locals.level = 1;
         resetAstroids(locals.level);
         gameGrid = new Grid(50, l);
         locals.player = new Ship(locals);
-        n = new Simple_NEAT(gameGrid.getWidth() * gameGrid.getWidth() + 3, 4);
+        n = new Simple_NEAT(gameGrid.getWidth() * gameGrid.getWidth() + 1, 4);
         Network temp  = Network.loadFromFile("/Users/ryanwalt/Downloads/CODE/Java/Processing/Asteroids_Train/best.net");
         n.addAgent(temp);
         n.setCurrentAgent(0);
@@ -126,14 +126,14 @@ public class GameScene{
     }
 
     public void runNetwork2(){
-        float[] inputs = new float[gameGrid.getWidth() * gameGrid.getWidth() + 3];
-        inputs[0] = (float) locals.player.getX() / 900.0;
-        inputs[1] = (float) locals.player.getY() / 900.0;
-        inputs[2] = (float) locals.player.getAngle() / (2*3.14159265359);
-        int c = 3;
+        float[] inputs = new float[gameGrid.getWidth() * gameGrid.getWidth() + 1];
+        inputs[0] = (float) locals.player.getAngle() / (2*3.14159265359);
+        int c = 1;
         for (int x = 0; x < gameGrid.getGrid().length; x++){
             for (int y = 0; y < gameGrid.getGrid().length; y++){
                 inputs[c] = (float) gameGrid.getGrid()[x][y];
+                // System.out.println(c + " - " + (float) gameGrid.getGrid()[x][y]);
+                c++;
             }
         }
 
@@ -141,16 +141,16 @@ public class GameScene{
 
         float[] outputs = n.getCurOutput();
 
-        if (outputs[0] > 0.5){
+        if (outputs[0] > 0.0){
             locals.player.shoot();
         }
-        if (outputs[1] >=0.5){
+        if (outputs[1] > 0.0){
             locals.player.turnLeft();
         }
-        if (outputs[2] >= 0.5){
+        if (outputs[2] >  0.0){
             locals.player.turnRight();
         }
-        if (outputs[3] <= 0.5){
+        if (outputs[3] > 0.0){
             locals.player.accelerate = true;
             locals.player.accelerate();
         }

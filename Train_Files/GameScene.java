@@ -72,17 +72,17 @@ public class GameScene{
         locals.player.show();
         showAsteroids();
         checkLevel();
+		gameGrid.show();
     }
 
     public void runNetwork(){
-        float[] inputs = new float[gameGrid.getWidth() * gameGrid.getWidth() + 3];
-        inputs[0] = (float) locals.player.getX() / (float) 900.0;
-        inputs[1] = (float) locals.player.getY() / (float) 900.0;
-        inputs[2] = (float) locals.player.getAngle() / (float) (2*3.14159265359);
-        int c = 3;
+        float[] inputs = new float[gameGrid.getWidth() * gameGrid.getWidth() + 1];
+        inputs[0] = (float) locals.player.getAngle() / (float) (2*3.14159265359);
+        int c = 1;
         for (int x = 0; x < gameGrid.getGrid().length; x++){
             for (int y = 0; y < gameGrid.getGrid().length; y++){
                 inputs[c] = (float) gameGrid.getGrid()[x][y];
+				c++;
             }
         }
 
@@ -90,16 +90,16 @@ public class GameScene{
 
         float[] outputs = locals.neat.getCurOutput();
 
-        if (outputs[0] > 0.5){
+        if (outputs[0] > 0.0){
             locals.player.shoot();
         }
-        if (outputs[1] >=0.5){
+        if (outputs[1] > 0.0){
             locals.player.turnLeft();
         }
-        if (outputs[2] >= 0.5){
+        if (outputs[2] > 0.0){
             locals.player.turnRight();
         }
-        if (outputs[3] >= 0.5){
+        if (outputs[3] > 0.0){
             locals.player.accelerate = true;
             locals.player.accelerate();
         }
