@@ -11,7 +11,7 @@ public class GameScene{
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
         n = new Simple_NEAT(33,4);
-        Network temp  = Network.loadFromFile("C:/Users/WALTR/Downloads/CODE/Processing/Asteroids_Train/best.net");
+        Network temp  = Network.loadFromFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/best.net");
         n.addAgent(temp);
         n.setCurrentAgent(0);
     }

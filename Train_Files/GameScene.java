@@ -75,15 +75,20 @@ public class GameScene{
     public void runNetwork(){
         float[] inputs = new float[33];
         int c = 0;
+
+        //Values 0-1 for distance between asteroid and ship
         for (Sensor s : locals.player.getSensors()){
             inputs[c] = (float) s.getWeightValue();
             c++;
         }
+
+        //Values 0, 0.33, 0.66, 0.99 for size of asteroid intersecting sensor
         for (Sensor s : locals.player.getSensors()){
             inputs[c] = (float) s.getLevelValue();
             c++;
         }
 
+        //Value 0-1 for number of active shots
         inputs[32] = (float) locals.player.bullets.size() / 4;
 
         locals.neat.runCurrent(inputs);
