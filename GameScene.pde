@@ -8,7 +8,7 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 1;
+        locals.level = 4;
         resetAstroids(locals.level);
         gameGrid = new Grid(50, l);
         locals.player = new Ship(locals);
