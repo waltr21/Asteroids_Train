@@ -14,13 +14,17 @@ public class Simple_NEAT{
         numInputs = nI;
         numOutputs = nO;
         genNum = 0;
-        keepBest = true;
+        keepBest = false;
         agents = new ArrayList<Network>();
         mutationRate = 0.60;
     }
 
     public void addAgent(){
         agents.add(new Network(numInputs, numOutputs));
+    }
+    
+    public void addAgent(Network n){
+        agents.add(n);
     }
 
     public void setCurrentAgent(int index){
@@ -67,7 +71,6 @@ public class Simple_NEAT{
         ArrayList<Network> nextGen = new ArrayList<Network>();
         if (keepBest){
             popSize = agents.size() - 1;
-            nextGen.add(getBestFit().copy());
         }
         else
             popSize = agents.size();
@@ -116,14 +119,11 @@ public class Simple_NEAT{
             //Should we mutate this agent?
             if (mutationRate >= num){
                 num = ThreadLocalRandom.current().nextDouble(0,1);
-                if (num <= 1/4){
+                if (num <= .33){
                     a.addRandHiddenNode();
                 }
-                else if(num > 1/4 && num <= 2/4){
+                else if(num > .33 && num <= .66){
                     a.addRandConnection();
-                }
-                else if(num > 2/4 && num <= 3/4){
-                    a.remvoveRandConnection();
                 }
                 else{
                     a.mutateWeight();

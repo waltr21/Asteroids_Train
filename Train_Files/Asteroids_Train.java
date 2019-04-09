@@ -13,7 +13,7 @@ public class Asteroids_Train{
 
     public Asteroids_Train(){
         setup();
-        neat = new Simple_NEAT(17, 4);
+        neat = new Simple_NEAT(34, 4);
         locals.neat = neat;
         for (int i = 0; i < 60; i++){
             neat.addAgent();
@@ -39,7 +39,7 @@ public class Asteroids_Train{
         int totalFrames = 30 * 60;
         int c = 0;
         for (int i = 0; i < 60; i++){
-            locals.GS.resetAstroids(locals.level);
+            locals.GS.resetAstroids(3);
             neat.setCurrentAgent(i);
             int frameCount = 0;
 
@@ -48,9 +48,9 @@ public class Asteroids_Train{
                 frameCount++;
             }
 
-            int curFit = locals.player.getScore();
+            float curFit = (float) locals.player.getScore();
             // System.out.println(locals.player.getAccuracy());
-            curFit += curFit * locals.player.getAccuracy();
+            curFit = (float) curFit * (float) locals.player.getAccuracy();
             if (totalFrames - frameCount < 5)
                 curFit *= 2;
             neat.setFitness(i, curFit);

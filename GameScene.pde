@@ -7,11 +7,11 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 1;
+        locals.level = 3;
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
-        n = new Simple_NEAT(17,4);
-        Network temp  = Network.loadFromFile("/Users/ryanwalt/Downloads/CODE/Java/Processing/Asteroids_Train/best.net");
+        n = new Simple_NEAT(34,4);
+        Network temp  = Network.loadFromFile("/home/sam/Documents/CIS_365/AiProject/Asteroids_Train/best.net");
         n.addAgent(temp);
         n.setCurrentAgent(0);
     }
@@ -79,14 +79,27 @@ public class GameScene{
     }
 
     public void runNetwork(){
-        float[] inputs = new float[17];
+        float[] inputs = new float[34];
         int c = 0;
         for (Sensor s : locals.player.getSensors()){
             inputs[c] = (float) s.getWeightValue();
             c++;
         }
+        
+        float x = 1.5f;
+        float y = 1.2f;
 
-        inputs[16] = (float) locals.player.bullets.size() / 4;
+        //add extra weight to front 3 sensors
+        //inputs[23] = inputs[23] * x;
+        inputs[24] = inputs[24] * 2;
+        //inputs[25] = inputs[25] * x;
+
+        //inputs[7] = inputs[7] * y;
+        inputs[8] = inputs[8] * x;
+        //inputs[9] = inputs[9] * y;
+       
+       
+        inputs[33] = (float) locals.player.bullets.size() / 4;
 
         n.runCurrent(inputs);
 

@@ -43,22 +43,31 @@ public class Ship{
         this.bullets = new ArrayList<Bullet>();
         this.velocity = new Vector();
         this.sensors = new ArrayList<Sensor>();
-        sensors.add(new Sensor(0, locals));
-        sensors.add(new Sensor(PI, locals));
-        sensors.add(new Sensor(3*PI/2, locals));
-        sensors.add(new Sensor(PI/2, locals));
-        sensors.add(new Sensor(PI/4, locals));
-        sensors.add(new Sensor(3*PI/4, locals));
-        sensors.add(new Sensor(7*PI/4, locals));
-        sensors.add(new Sensor(5*PI/4, locals));
-        sensors.add(new Sensor(22.5*(PI/180), locals));
-        sensors.add(new Sensor(-22.5*(PI/180), locals));
-        sensors.add(new Sensor(-67.5*(PI/180), locals));
-        sensors.add(new Sensor(67.5*(PI/180), locals));
-        sensors.add(new Sensor(112.5*(PI/180), locals));
-        sensors.add(new Sensor(-112.5*(PI/180), locals));
-        sensors.add(new Sensor(-157.5*(PI/180), locals));
-        sensors.add(new Sensor(157.5*(PI/180), locals));
+        // sensors.add(new Sensor(0, locals));
+        // sensors.add(new Sensor(PI, locals));
+        // sensors.add(new Sensor(3*PI/2, locals));
+        // sensors.add(new Sensor(PI/2, locals));
+        // sensors.add(new Sensor(PI/4, locals));
+        // sensors.add(new Sensor(3*PI/4, locals));
+        // sensors.add(new Sensor(7*PI/4, locals));
+        // sensors.add(new Sensor(5*PI/4, locals));
+        // sensors.add(new Sensor(22.5*(PI/180), locals));
+        // sensors.add(new Sensor(-22.5*(PI/180), locals));
+        // sensors.add(new Sensor(-67.5*(PI/180), locals));
+        // sensors.add(new Sensor(67.5*(PI/180), locals));
+        // sensors.add(new Sensor(112.5*(PI/180), locals));
+        // sensors.add(new Sensor(-112.5*(PI/180), locals));
+        // sensors.add(new Sensor(-157.5*(PI/180), locals));
+        // sensors.add(new Sensor(157.5*(PI/180), locals));
+
+        float rotation = 0;
+        for (int i = 0; i < 32; i++) {
+          sensors.add(new Sensor(rotation, locals));
+          rotation += 0.19625;
+        }
+
+
+
 
         numShots = 0;
         numHits = 0;

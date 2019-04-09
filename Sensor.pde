@@ -2,12 +2,14 @@ import java.lang.Math;
 
 public class Sensor{
     private double length, angle, weightValue;
+    private color c;
     private Locals locals;
 
-    public Sensor(double angle, Locals l){
+    public Sensor(double angle, Locals l, color c){
         this.length = 350;
         this.angle = angle;
         this.weightValue = 0.0;
+        this.c = c;
         locals = l;
     }
 
@@ -16,7 +18,7 @@ public class Sensor{
         double y2 = y + (Math.sin(angle + this.angle) * length);
         // System.out.println(angle);
         strokeWeight(2);
-        stroke(255);
+        stroke(c);
         line((float) x, (float) y, (float) x2, (float) y2);
         calculateIntersection(x,y,x2,y2);
     }

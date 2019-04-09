@@ -73,14 +73,24 @@ public class GameScene{
     }
 
     public void runNetwork(){
-        float[] inputs = new float[17];
+        float[] inputs = new float[34];
         int c = 0;
+
+        //Value 0-1 for distance between asteroid and ship
         for (Sensor s : locals.player.getSensors()){
             inputs[c] = (float) s.getWeightValue();
             c++;
         }
 
-        inputs[16] = (float) locals.player.bullets.size() / 4;
+        float x = 1.5f;
+
+        //add extra weight to the front sensor
+        inputs[24] = inputs[24] * 2;
+
+        //add extra weight to the rear sensor
+        inputs[8] = inputs[8] * x;
+
+        inputs[33] = (float) locals.player.bullets.size() / 4;
 
         locals.neat.runCurrent(inputs);
 

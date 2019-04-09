@@ -41,22 +41,21 @@ public class Ship{
         this.bullets = new ArrayList<Bullet>();
         this.velocity = new Vector();
         this.sensors = new ArrayList<Sensor>();
-        sensors.add(new Sensor(0, locals));
-        sensors.add(new Sensor(PI, locals));
-        sensors.add(new Sensor(3*PI/2, locals));
-        sensors.add(new Sensor(PI/2, locals));
-        sensors.add(new Sensor(PI/4, locals));
-        sensors.add(new Sensor(3*PI/4, locals));
-        sensors.add(new Sensor(7*PI/4, locals));
-        sensors.add(new Sensor(5*PI/4, locals));
-        sensors.add(new Sensor(22.5*(PI/180), locals));
-        sensors.add(new Sensor(-22.5*(PI/180), locals));
-        sensors.add(new Sensor(-67.5*(PI/180), locals));
-        sensors.add(new Sensor(67.5*(PI/180), locals));
-        sensors.add(new Sensor(112.5*(PI/180), locals));
-        sensors.add(new Sensor(-112.5*(PI/180), locals));
-        sensors.add(new Sensor(-157.5*(PI/180), locals));
-        sensors.add(new Sensor(157.5*(PI/180), locals));
+        
+        float rotation = 0;
+        color white = color(255, 255, 255);
+        color red = color(244, 66, 66);
+        color green = color(64, 221, 62);
+        for (int i = 0; i < 32; i++) {
+          if (i >= 24 && i <= 24) {
+            sensors.add(new Sensor(rotation, locals, red));
+          } else if (i >= 8 && i <= 8) {
+            sensors.add(new Sensor(rotation, locals, green));
+          } else {
+            sensors.add(new Sensor(rotation, locals, white));
+          }
+          rotation += 0.19625;
+        }
 
 
 
