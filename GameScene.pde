@@ -8,12 +8,12 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 4;
+        locals.level = 1;
         resetAstroids(locals.level);
         gameGrid = new Grid(50, l);
         locals.player = new Ship(locals);
         n = new Simple_NEAT(gameGrid.getWidth() * gameGrid.getWidth() + 1, 4);
-        Network temp  = Network.loadFromFile("/Users/ryanwalt/Downloads/CODE/Java/Processing/Asteroids_Train/best.net");
+        Network temp  = Network.loadFromFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/best.net");
         n.addAgent(temp);
         n.setCurrentAgent(0);
     }
