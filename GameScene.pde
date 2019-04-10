@@ -7,7 +7,7 @@ public class GameScene{
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 4;
+        locals.level = 1;
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
         n = new Simple_NEAT(33,4);
