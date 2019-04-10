@@ -1,4 +1,4 @@
-#!/bin/ bash
+#!/bin/bash
 javac ./*.java
 javac ./Train_Files/*.java
 cd ./Train_Files
