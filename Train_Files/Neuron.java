@@ -12,6 +12,9 @@ public class Neuron implements Serializable{
     private Random r;
     private int id, layer;
 
+    private static final long serialVersionUID = 2L;
+
+
     public Neuron(float bias, int id){
         this.bias = bias;
         r = new Random();
@@ -149,6 +152,9 @@ class Connection implements Serializable{
     public Neuron neuron;
     public float weight;
     private Random r;
+
+    private static final long serialVersionUID = 3L;
+
 
     public Connection(Neuron n){
         neuron = n;

@@ -34,7 +34,7 @@ public class Asteroids_Train{
         locals.player = new Ship(locals);
         locals.asteroids = new ArrayList<Asteroid>();
         locals.GS = new GameScene(locals);
-        locals.level = 4;
+        locals.level = 8;
     }
 
     private void draw(){
@@ -81,6 +81,21 @@ public class Asteroids_Train{
                 neat.breed();
             // if(i % 50 == 0)
             //     locals.level++;
+
+            ////////////////////////////////////////////////////
+            //Save a .net file for every generation
+            ///////////////////////////////////////////////////
+
+            try {
+            	neat.getNetwork(1).saveGenToFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/visualizeGenerations/Gen" + i + "Best.net");
+        	} catch (Exception e) {
+        		System.out.println(e);
+        	}
+
+
+
+
+            ///////////////////////////////////////////////////
         }
         neat.getBestFit().saveToFile("best.net");
     }

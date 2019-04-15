@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.File;
 
 
 public class Network implements Serializable, Comparable<Network>{
@@ -13,6 +14,8 @@ public class Network implements Serializable, Comparable<Network>{
     float bias;
     Random r;
     double fitness, genFitness;
+    
+    private static final long serialVersionUID = 1L;
 
     public Network(int numInputs, int numOutputs){
         idCount = 0;
@@ -304,6 +307,28 @@ public class Network implements Serializable, Comparable<Network>{
             System.out.println(e);
             return null;
         }
+    }
+    
+    public static ArrayList<Network> loadGenFiles(String s) {
+      ArrayList<Network> list = new ArrayList<Network>();
+       try {
+         File folder = new File(s);
+         for (final File fileEntry : folder.listFiles()) {
+           if (fileEntry.isDirectory()) {
+              System.out.println("Sub directories will be ignored"); 
+           } else {
+              FileInputStream fis = new FileInputStream(fileEntry);
+              ObjectInputStream ois = new ObjectInputStream(fis);
+              Network n = (Network) ois.readObject();
+              ois.close();
+              list.add(n);
+           }
+         }
+         return list;
+       } catch (Exception e) {
+         System.out.println(e);
+         return null;
+       }
     }
 
     public void setGenFitness(double f){

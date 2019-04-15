@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.File;
+
 
 
 public class Network implements Serializable, Comparable<Network>{
@@ -13,6 +15,8 @@ public class Network implements Serializable, Comparable<Network>{
     float bias;
     Random r;
     double fitness, genFitness;
+
+    private static final long serialVersionUID = 1L;
 
     public Network(int numInputs, int numOutputs){
         idCount = 0;
@@ -91,7 +95,7 @@ public class Network implements Serializable, Comparable<Network>{
         // System.out.println("Adding node " + tempHidden.getID() +  " --> " + randConnection.neuron.getID() + " - " + randNode.getID());
 
         //Set the layer of this node to its output + 1
-        // tempHidden.setLayer(randNode.getLayer() + 1);
+        //tempHidden.setLayer(randNode.getLayer() + 1);
     }
 
     public void addRandConnection(Neuron node){
@@ -287,6 +291,7 @@ public class Network implements Serializable, Comparable<Network>{
             return true;
         }
         catch(Exception e){
+        	System.out.println("Error here");
             System.out.println(e);
             return false;
         }
@@ -303,6 +308,27 @@ public class Network implements Serializable, Comparable<Network>{
         catch(Exception e){
             System.out.println(e);
             return null;
+        }
+    }
+
+    public boolean saveGenToFile(String s) {
+    	try{
+    		File file = new File(s);
+    		if (!file.exists()) {
+            	file.createNewFile();
+            }
+
+            FileOutputStream fos = new FileOutputStream(s);
+
+
+    		ObjectOutputStream oos = new ObjectOutputStream(fos);
+    		oos.writeObject(this);
+    		oos.close();
+            return true;
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return false;
         }
     }
 

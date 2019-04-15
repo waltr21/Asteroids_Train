@@ -1,17 +1,62 @@
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.ArrayList;
 
 public class GameScene{
     boolean online;
     Locals locals;
     Simple_NEAT n;
+    Visual vis;
+    int generations;
+    int genCount = 0;
 
     public GameScene(Locals l){
         locals = l;
-        locals.level = 1;
+        locals.level = 4;
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
         n = new Simple_NEAT(17,4);
-        Network temp  = Network.loadFromFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/best.net");
+        Network temp  = Network.loadFromFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/best.net");
+        
+        //Load all generations
+        ArrayList<Network> genList = Network.loadGenFiles("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/visualizeGenerations/");
+        generations = genList.size();
+        vis = new Visual(genList);
+        
+       //System.out.println("before");
+
+        //for (Network g: genList) {
+        //  System.out.println("_____________Inputs Layer_____________");
+        //   for (Neuron n: g.inputs) {
+        //     //System.out.println(n.getConnections());
+        //     System.out.println(n.getID());
+             
+        //   }
+        //   System.out.println("");
+        //   System.out.println("_____________hidden Layer_____________");
+        //   for (Neuron n: g.hidden) {
+        //    // System.out.println(n.getConnections());
+        //      System.out.print(n.getID() + " connected to --> ");
+        //     for (Connection c: n.getConnections()) {
+        //        //System.out.println(c);
+        //        System.out.print(c.getNeuron().getID() + " , "); 
+        //     }
+        //    System.out.println("");
+
+        //   }
+        //  System.out.println("");
+        //   System.out.println("_____________Outputs Layer_____________");
+        //   for (Neuron n: g.outputs) {
+        //     //System.out.println(n.getConnections());
+        //     System.out.print( n.getID() + " connected to --> ");
+        //     for (Connection c: n.getConnections()) {
+        //        //System.out.println(c);
+        //        System.out.print(c.getNeuron().getID() + " , "); 
+        //     }
+        //      System.out.println("");
+
+        //   }
+        //}
+        
         n.addAgent(temp);
         n.setCurrentAgent(0);
     }
@@ -22,7 +67,7 @@ public class GameScene{
     private void showText(){
         textAlign(CENTER);
         textSize(30);
-        String levelString = "Level " + locals.level + "\n" + locals.player.getScore();
+        String levelString = "Generation " + genCount + "\n";
         fill(255);
         textSize(30);
         text(levelString, width/2, 50);
@@ -70,12 +115,19 @@ public class GameScene{
 
     public void show(){
         background(0);
-        showText();
+        //showText();
         // locals.player.showBullets();
-        locals.player.show();
-        runNetwork();
-        showAsteroids();
-        checkLevel();
+        //locals.player.show();
+        //runNetwork();
+        //showAsteroids();
+        //checkLevel();
+        
+        if (genCount < generations) {
+          vis.show(genCount);
+        } else {
+          //vis.show(generations - 1); 
+        }
+        genCount++;
     }
 
     public void runNetwork(){

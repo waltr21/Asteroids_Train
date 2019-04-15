@@ -11,6 +11,9 @@ public class Neuron implements Serializable{
     private float value;
     private Random r;
     private int id, layer;
+    
+        private static final long serialVersionUID = 2L;
+
 
     public Neuron(float bias, int id){
         this.bias = bias;
@@ -149,6 +152,9 @@ class Connection implements Serializable{
     public Neuron neuron;
     public float weight;
     private Random r;
+    
+    private static final long serialVersionUID = 3L;
+
 
     public Connection(Neuron n){
         neuron = n;
@@ -167,5 +173,13 @@ class Connection implements Serializable{
         //yea this sucks but I am lazy at the moment.
         if (r.nextFloat() > 0.5)
             weight = weight * -1;
+    }
+    
+    public Neuron getNeuron() {
+       return neuron; 
+    }
+    
+    public float getWeight() {
+       return  weight;
     }
 }
