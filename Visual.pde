@@ -148,7 +148,7 @@ public class Visual{
         String levelString = "Generation " + genCount + "\n";
         fill(255);
         textSize(30);
-        text(levelString, width/2, 50);
+        text(levelString, width/6, 50);
         String liveString = "";
         for (int i = 0; i < locals.player.getLives(); i++){
             liveString += " | ";
@@ -215,13 +215,34 @@ public class Visual{
         return false;
     }
    
+   private void setEdges(int generation){
+    //Draw the connections
+          for (int x = 0; x < X; x++){
+              for (int y = 0; y < Y; y++){
+                  //Go through once
+                  for (int a = 0; a < X; a++){
+                      for (int b = 0; b < Y; b++){
+                          //Go through second
+                          if(grid[x][y] >= 0 && grid[a][b] >= 0) {
+                            if(shouldConnect(generation, grid[x][y], grid[a][b])) {
+                              
+                              grid[x][y] = grid[a][b];
+                              
+                            }
+                          }
+                      }
+                  }
+              }
+          } 
+   }
     
     
-    public void show(int generation){
+    public void show(int generation, boolean refresh){
       
         showText(generation);
       
-        float squareSize = 880;
+        //float squareSize = 880;
+        float squareSize = 300;
         
         stroke(255);
         fill(0, 0, 0);
@@ -229,7 +250,10 @@ public class Visual{
         
         float subSize = squareSize / Y;
         
-        setNodes(generation);
+        if (refresh) {
+          setNodes(generation);
+          //setEdges(generation);
+        }
         
         for (int x = 0; x < X; x++){
             for (int y = 0; y < Y; y++){
@@ -238,7 +262,32 @@ public class Visual{
                     noStroke();
                     rectMode(CORNER);
                     rect(10 + subSize * x, 60 + subSize * y, subSize, subSize);
+                    for (int a = 0; a < X; a++){
+                      for (int b = 0; b < Y; b++){
+                        if (grid[x][y] == grid[a][b]) {
+                          stroke(255);
+                          line(10 + subSize * x, 60 + subSize * y, 10 + subSize * a, 60 + subSize * b);
+                          
+                          if (grid[x][y] >= 0){
+                                fill(255, 0, 0);
+                                noStroke();
+                                rectMode(CORNER);
+                                rect(10 + subSize * x, 60 + subSize * y, subSize, subSize);
+                            }
+                            if (grid[a][b] >= 0){
+                                fill(255, 0, 0);
+                                noStroke();
+                                rectMode(CORNER);
+                                rect(10 + subSize * a, 60 + subSize * b, subSize, subSize);
+                            }
+                          
+                        }
+                      }
+                    }
                 }
+                
+                
+                
                 //if (grid[x][y] < 0){
                 //    fill(255, 0, 0);
                 //    noStroke();
@@ -248,22 +297,40 @@ public class Visual{
             }
         }
         
-        //Draw the connections
-        for (int x = 0; x < X; x++){
-            for (int y = 0; y < Y; y++){
-                //Go through once
-                for (int a = 0; a < X; a++){
-                    for (int b = 0; b < Y; b++){
-                        //Go through second
-                        if(grid[x][y] >= 0 && grid[a][b] >= 0) {
-                          if(shouldConnect(generation, grid[x][y], grid[a][b])) {
-                            stroke(255);
-                            line(10 + subSize * x, 60 + subSize * y, 10 + subSize * a, 60 + subSize * b);
-                          }
-                        }
-                    }
-                }
-            }
+        if (refresh) {
+          ////Draw the connections
+          //for (int x = 0; x < X; x++){
+          //    for (int y = 0; y < Y; y++){
+          //        //Go through once
+          //        for (int a = 0; a < X; a++){
+          //            for (int b = 0; b < Y; b++){
+          //                //Go through second
+          //                if(grid[x][y] >= 0 && grid[a][b] >= 0) {
+          //                  if(shouldConnect(generation, grid[x][y], grid[a][b])) {
+          //                    stroke(255);
+          //                    line(10 + subSize * x, 60 + subSize * y, 10 + subSize * a, 60 + subSize * b);
+                              
+          //                    //try to color connecting nodes
+          //                    if (grid[x][y] >= 0){
+          //                        fill(255, 0, 0);
+          //                        noStroke();
+          //                        rectMode(CORNER);
+          //                        rect(10 + subSize * x, 60 + subSize * y, subSize, subSize);
+          //                    }
+          //                    if (grid[a][b] >= 0){
+          //                        fill(255, 0, 0);
+          //                        noStroke();
+          //                        rectMode(CORNER);
+          //                        rect(10 + subSize * a, 60 + subSize * b, subSize, subSize);
+          //                    }
+                              
+                              
+          //                  }
+          //                }
+          //            }
+          //        }
+          //    }
+          //}
         }
  
     }

@@ -6,7 +6,7 @@ Locals locals;
 void setup(){
     locals = new Locals();
     size(900, 900, OPENGL);
-    frameRate(5);
+    frameRate(60);
     locals.player = new Ship(locals);
     locals.asteroids = new ArrayList<Asteroid>();
     GS = new GameScene(locals);

@@ -92,7 +92,11 @@ public class Asteroids_Train{
         		System.out.println(e);
         	}
 
-
+			// try {
+   //          	neat.getBestFit().saveGenToFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/visualizeGenerations/Gen" + i + "Best.net");
+   //      	} catch (Exception e) {
+   //      		System.out.println(e);
+   //      	}
 
 
             ///////////////////////////////////////////////////

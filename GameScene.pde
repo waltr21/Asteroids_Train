@@ -7,6 +7,7 @@ public class GameScene{
     Simple_NEAT n;
     Visual vis;
     int generations;
+    int frameCount = 0;
     int genCount = 0;
 
     public GameScene(Locals l){
@@ -15,7 +16,7 @@ public class GameScene{
         resetAstroids(locals.level);
         locals.player = new Ship(locals);
         n = new Simple_NEAT(17,4);
-        Network temp  = Network.loadFromFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/best.net");
+        Network temp  = Network.loadFromFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/visualizeGenerations/Gen" + genCount + "Best.net");
         
         //Load all generations
         ArrayList<Network> genList = Network.loadGenFiles("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/visualizeGenerations/");
@@ -67,7 +68,7 @@ public class GameScene{
     private void showText(){
         textAlign(CENTER);
         textSize(30);
-        String levelString = "Generation " + genCount + "\n";
+        String levelString = "Level " + locals.level + "\n" + locals.player.getScore();
         fill(255);
         textSize(30);
         text(levelString, width/2, 50);
@@ -115,19 +116,45 @@ public class GameScene{
 
     public void show(){
         background(0);
-        //showText();
-        // locals.player.showBullets();
-        //locals.player.show();
-        //runNetwork();
-        //showAsteroids();
-        //checkLevel();
+        showText();
+         locals.player.showBullets();
+        locals.player.show();
+        runNetwork();
+        showAsteroids();
+        checkLevel();
         
-        if (genCount < generations) {
-          vis.show(genCount);
-        } else {
-          //vis.show(generations - 1); 
+        if (frameCount == genCount) {
+          vis.show(genCount, true);
+          frameCount++;
         }
-        genCount++;
+        vis.show(genCount, false);
+        
+        //if ((frameCount % 8) == 0) {
+        //  if (genCount < generations) {
+        //    vis.show(genCount, true);
+             
+        //  }
+        //  genCount++;
+        //}
+        //vis.show(genCount, false);
+        //frameCount++;
+        if(locals.player.dead) {
+         System.out.println("Dead"); 
+         genCount++;
+         resetNewGen();
+        }
+    }
+    
+    private void resetNewGen() {
+        locals.level = 4;
+        resetAstroids(locals.level);
+        locals.player = new Ship(locals);
+        n = new Simple_NEAT(17,4);
+        Network temp  = Network.loadFromFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/visualizeGenerations/Gen" + genCount + "Best.net");
+        
+        n.addAgent(temp);
+        n.setCurrentAgent(0);
+         
     }
 
     public void runNetwork(){
