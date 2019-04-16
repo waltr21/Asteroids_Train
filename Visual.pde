@@ -217,7 +217,7 @@ public class Visual{
    
     
     
-    public void show(int generation){
+    public void show(int generation, boolean refresh){
       
         showText(generation);
       
@@ -229,7 +229,9 @@ public class Visual{
         
         float subSize = squareSize / Y;
         
-        setNodes(generation);
+        if(refresh) {
+          setNodes(generation);
+        }
         
         for (int x = 0; x < X; x++){
             for (int y = 0; y < Y; y++){
@@ -259,6 +261,21 @@ public class Visual{
                           if(shouldConnect(generation, grid[x][y], grid[a][b])) {
                             stroke(255);
                             line(10 + subSize * x, 60 + subSize * y, 10 + subSize * a, 60 + subSize * b);
+                            
+                            //make connected nodes red
+                            if(grid[x][y] >= 0) {
+                              fill(255, 0, 0);
+                              noStroke();
+                              rectMode(CORNER);
+                              rect(10 + subSize * x, 60 + subSize * y, subSize, subSize);
+                            }
+                            if(grid[a][b] >= 0) {
+                              fill(255, 0, 0);
+                              noStroke();
+                              rectMode(CORNER);
+                              rect(10 + subSize * a, 60 + subSize * b, subSize, subSize);
+                            }
+                            
                           }
                         }
                     }

@@ -123,9 +123,9 @@ public class GameScene{
         //checkLevel();
         
         if (genCount < generations) {
-          vis.show(genCount);
+          vis.show(genCount, true);
         } else {
-          //vis.show(generations - 1); 
+          vis.show(generations - 1, false); 
         }
         genCount++;
     }

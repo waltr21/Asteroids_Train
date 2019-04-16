@@ -77,20 +77,22 @@ public class Asteroids_Train{
             runAll();
             // System.out.print(String.format("\033[2J"));
             printBest(i, count);
-            if(i != count)
-                neat.breed();
-            // if(i % 50 == 0)
-            //     locals.level++;
+
 
             ////////////////////////////////////////////////////
             //Save a .net file for every generation
             ///////////////////////////////////////////////////
 
             try {
-            	neat.getNetwork(1).saveGenToFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/visualizeGenerations/Gen" + i + "Best.net");
+            	neat.getBestFit().saveGenToFile("/home/sam/Documents/CIS_365/AiProject/newRepo/Asteroids_Train/Train_Files/visualizeGenerations/Gen" + i + "Best.net");
         	} catch (Exception e) {
         		System.out.println(e);
         	}
+
+            if(i != count)
+                neat.breed();
+            // if(i % 50 == 0)
+            //     locals.level++;
 
 
 
