@@ -145,7 +145,7 @@ public class Visual{
      private void showText(int genCount){
         textAlign(CENTER);
         textSize(30);
-        String levelString = "Generation " + genCount + "\n";
+        String levelString = "Generation " + genCount ;
         fill(255);
         textSize(30);
         text(levelString, width/6, 50);
@@ -241,98 +241,7 @@ public class Visual{
       
         showText(generation);
       
-        //float squareSize = 880;
-        float squareSize = 300;
         
-        stroke(255);
-        fill(0, 0, 0);
-        rect(10, 60, squareSize, squareSize);
-        
-        float subSize = squareSize / Y;
-        
-        if (refresh) {
-          setNodes(generation);
-          //setEdges(generation);
-        }
-        
-        for (int x = 0; x < X; x++){
-            for (int y = 0; y < Y; y++){
-                if (grid[x][y] >= 0){
-                    fill(255);
-                    noStroke();
-                    rectMode(CORNER);
-                    rect(10 + subSize * x, 60 + subSize * y, subSize, subSize);
-                    for (int a = 0; a < X; a++){
-                      for (int b = 0; b < Y; b++){
-                        if (grid[x][y] == grid[a][b]) {
-                          stroke(255);
-                          line(10 + subSize * x, 60 + subSize * y, 10 + subSize * a, 60 + subSize * b);
-                          
-                          if (grid[x][y] >= 0){
-                                fill(255, 0, 0);
-                                noStroke();
-                                rectMode(CORNER);
-                                rect(10 + subSize * x, 60 + subSize * y, subSize, subSize);
-                            }
-                            if (grid[a][b] >= 0){
-                                fill(255, 0, 0);
-                                noStroke();
-                                rectMode(CORNER);
-                                rect(10 + subSize * a, 60 + subSize * b, subSize, subSize);
-                            }
-                          
-                        }
-                      }
-                    }
-                }
-                
-                
-                
-                //if (grid[x][y] < 0){
-                //    fill(255, 0, 0);
-                //    noStroke();
-                //    rectMode(CORNER);
-                //    rect(10 + subSize * x, 60 + subSize * y, subSize, subSize);
-                //}
-            }
-        }
-        
-        if (refresh) {
-          ////Draw the connections
-          //for (int x = 0; x < X; x++){
-          //    for (int y = 0; y < Y; y++){
-          //        //Go through once
-          //        for (int a = 0; a < X; a++){
-          //            for (int b = 0; b < Y; b++){
-          //                //Go through second
-          //                if(grid[x][y] >= 0 && grid[a][b] >= 0) {
-          //                  if(shouldConnect(generation, grid[x][y], grid[a][b])) {
-          //                    stroke(255);
-          //                    line(10 + subSize * x, 60 + subSize * y, 10 + subSize * a, 60 + subSize * b);
-                              
-          //                    //try to color connecting nodes
-          //                    if (grid[x][y] >= 0){
-          //                        fill(255, 0, 0);
-          //                        noStroke();
-          //                        rectMode(CORNER);
-          //                        rect(10 + subSize * x, 60 + subSize * y, subSize, subSize);
-          //                    }
-          //                    if (grid[a][b] >= 0){
-          //                        fill(255, 0, 0);
-          //                        noStroke();
-          //                        rectMode(CORNER);
-          //                        rect(10 + subSize * a, 60 + subSize * b, subSize, subSize);
-          //                    }
-                              
-                              
-          //                  }
-          //                }
-          //            }
-          //        }
-          //    }
-          //}
-        }
- 
     }
     
     private  int getRandomNumberInRange(int min, int max) {
